@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using SAPbouiCOM.Framework;
 using Diamond_Addon.Providers;
-using Diamond_Addon.Forms; 
+using Diamond_Addon.Forms;
+using EvoAddon.Forms;
 
 namespace Diamond_Addon
 {
@@ -19,6 +20,7 @@ namespace Diamond_Addon
                 B1Provider.CreateMenuItem("43520", "ESY_DIO", "Diamond", SAPbouiCOM.BoMenuType.mt_POPUP, null, -1);
 
                 B1Provider.CreateMenuItem("ESY_DIO", "ESY_DIO_PRD", "Produce", SAPbouiCOM.BoMenuType.mt_STRING, null, -1);
+                B1Provider.CreateMenuItem("ESY_DIO", "ESY_DIO_IMT", "Import From Excel", SAPbouiCOM.BoMenuType.mt_STRING, null, -1);
 
                 B1Provider.CreateMenuItem("ESY_DIO", "ESY_DIO_INI", "Initialize", SAPbouiCOM.BoMenuType.mt_STRING, null, -1);
 
@@ -48,10 +50,13 @@ namespace Diamond_Addon
                         oBar.Value = 1;
                         if (Application.SBO_Application.MessageBox("Do you want to initialize the addon? new object will be created!", 1, "Yes", "No") == 1)
                         {
-                            AddonProvider.CreateDatabase(); 
+                            AddonProvider.CreateDatabase();
+                         
 
                             oBar.Stop();
                         }
+
+                        Application.SBO_Application.MessageBox(LogProvider.setupErrorProcessLoggerBuilder.ToString());
                     }
                     catch (Exception ex)
                     {
@@ -68,6 +73,13 @@ namespace Diamond_Addon
                 if (pVal.BeforeAction == false & (pVal.BeforeAction == false && pVal.MenuUID == "ESY_DIO_PRD"))
                 { 
 
+                }
+
+
+                if (pVal.BeforeAction == false & (pVal.BeforeAction == false && pVal.MenuUID == "ESY_DIO_IMT"))
+                {
+                    ImportSerialNumbers form = new ImportSerialNumbers();
+                    form.Show();
                 }
 
 

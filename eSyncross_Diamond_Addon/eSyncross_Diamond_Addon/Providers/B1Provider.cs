@@ -20,8 +20,7 @@ namespace Diamond_Addon.Providers
         public static SAPbouiCOM.Application SBO_Application;
         public static SAPbobsCOM.Company oCompany;
 
-        static int lRetCode = 0;
-        static string sErrMsg = "";
+      
 
         public static SAPbobsCOM.Recordset oRecordset(string command)
         {
@@ -31,41 +30,34 @@ namespace Diamond_Addon.Providers
             return oRecordset;
         }
 
-
-        #region Post Records
-        public static void LogNotification(string ID, string docEntry, string docNum, string objType, string dateTime, string title, string message, string createdBy, string userId, string companyId)
+        internal static string GetReceivingWarehouseCode(string value)
         {
+            SAPbobsCOM.Recordset result = oRecordset($"Select \"WhsCode\" from \"OWHS\" where \"U_ESY_StockType\" = '{value}'");
 
-            SAPbobsCOM.UserTable smsl = (SAPbobsCOM.UserTable)B1Provider.oCompany.UserTables.Item("VO_Notifications");
-
-            smsl.Code = DateTime.Now.ToString("yyyyMMddHHmmss");
-            smsl.Name = DateTime.Now.ToString("yyyyMMddHHmmss");
-
-            smsl.UserFields.Fields.Item("U_ID").Value = ID ?? "";
-            smsl.UserFields.Fields.Item("U_DocEntry").Value = docEntry ?? "";
-            smsl.UserFields.Fields.Item("U_DocNum").Value = docNum ?? "";
-            smsl.UserFields.Fields.Item("U_ObjType").Value = objType ?? "";
-
-            smsl.UserFields.Fields.Item("U_DateTime").Value = dateTime ?? "";
-            smsl.UserFields.Fields.Item("U_Date").Value = DateTime.Now;
-
-            smsl.UserFields.Fields.Item("U_Title").Value = title ?? "";
-            smsl.UserFields.Fields.Item("U_Message").Value = message ?? "";
-            smsl.UserFields.Fields.Item("U_IsOpen").Value = "N";
-            smsl.UserFields.Fields.Item("U_CreatedBy").Value = createdBy ?? "";
-            smsl.UserFields.Fields.Item("U_UserId").Value = userId ?? "";
-            smsl.UserFields.Fields.Item("U_CompanyId").Value = companyId ?? "";
-
-
-            int isAdded = smsl.Add();
-
-            if (isAdded != 0)
+            if (result.RecordCount > 0)
             {
-                throw new Exception("Couldnt log notification due to :" + B1Provider.oCompany.GetLastErrorDescription());
+                return result.Fields.Item(0).Value.ToString();
+            }
+            else
+            {
+                return null;
             }
         }
 
-        #endregion
+        internal static string GetNextSerialNumber(string itemCode)
+        {
+            SAPbobsCOM.Recordset result = oRecordset($" EXEC ESY_SP_GetNextSerialNumber '{itemCode}'");
+
+            if (result.RecordCount > 0)
+            {
+                return  result.Fields.Item(0).Value.ToString();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
 
         public static string getDocEntryByXML(string xml)
         {
@@ -269,6 +261,7 @@ namespace Diamond_Addon.Providers
             GC.Collect(); // Release the handle to the User Fields
         }
 
+       
 
         public static void CreateUDO(UserDefinedObject obj)
         {

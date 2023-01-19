@@ -161,8 +161,8 @@
     <Compile Include="Forms\BrowseImportFile.b1f.cs">
       <DependentUpon>BrowseImportFile.b1f</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SerialNumberDetails.b1f.cs">
-      <DependentUpon>SerialNumberDetails.b1f</DependentUpon>
+    <Compile Include="Forms\ImportSerialNumbers.b1f.cs">
+      <DependentUpon>ImportSerialNumbers.b1f</DependentUpon>
     </Compile>
     <Compile Include="Handlers\JsonFormats.cs" />
     <Compile Include="Models\Notification.cs" />
@@ -189,11 +189,8 @@
       <FormCategory>UserForm</FormCategory>
       <SubType>Designer</SubType>
     </None>
-    <None Include="Forms\SerialNumberDetails.b1f">
-      <FormCategory>SystemForm</FormCategory>
-    </None>
-    <None Include="Forms\SerialNumberDetails.b1f__orig_srf">
-      <DependentUpon>SerialNumberDetails.b1f</DependentUpon>
+    <None Include="Forms\ImportSerialNumbers.b1f">
+      <FormCategory>UserForm</FormCategory>
     </None>
     <None Include="packages.config" />
     <None Include="Resources\CrystalReports\Picklist.rpt">
@@ -203,12 +200,9 @@
   <ItemGroup>
     <Content Include="DatabaseScript\HANA\Procedures\EVO_SP_GetAvailableQuantityInBins.sql" />
     <Content Include="DatabaseScript\HANA\Views\EVO_VW_SnBAvailableQtyinBins.sql" />
-    <Content Include="DatabaseScript\SQL\Procedures\EVO_SP_GetSalesOrderLinesForPicklist.sql" />
-    <Content Include="DatabaseScript\SQL\Procedures\EVO_SP_LowQuantityLocation.sql" />
-    <Content Include="DatabaseScript\SQL\Procedures\EVO_SP_ClosestLocation.sql" />
-    <Content Include="DatabaseScript\SQL\Procedures\EVO_SP_GetAvailableQuantityInBins.sql" />
+    <Content Include="DatabaseScript\SQL\Procedures\ESY_SP_GetNextSerialNumber.sql" />
     <Content Include="DatabaseScript\SQL\Tables\ESY_GRPO.sql" />
-    <Content Include="DatabaseScript\SQL\Views\EVO_VW_SnBAvailableQtyinBins.sql" />
+    <Content Include="DatabaseScript\SQL\Views\ESY_VW_GRPO_LINES.sql" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

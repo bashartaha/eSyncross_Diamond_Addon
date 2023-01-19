@@ -2,7 +2,7 @@
 
 CREATE TABLE ESY_GRPO (
 DocNum nvarchar(100),
-    RN  NVARCHAR(100),
+    TaggingDefinition  NVARCHAR(100),
     Description NVARCHAR(100),
     Alias NVARCHAR(100),
     JewelryType NVARCHAR(100),

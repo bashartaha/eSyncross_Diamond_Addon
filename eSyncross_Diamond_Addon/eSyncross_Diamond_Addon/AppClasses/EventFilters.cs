@@ -52,7 +52,7 @@ namespace Diamond_Addon
 
 
 
-            Application.SBO_Application.SetFilter(oFilters);
+           // Application.SBO_Application.SetFilter(oFilters);
             // events handled by SBO_Application_ItemEvent
              Application.SBO_Application.ItemEvent += new SAPbouiCOM._IApplicationEvents_ItemEventEventHandler(SBO_Application_ItemEvent);
 
