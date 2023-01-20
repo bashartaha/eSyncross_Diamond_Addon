@@ -653,6 +653,51 @@ namespace EvoAddon.Forms
 
                 #endregion
 
+                #region Attachment
+
+                SAPbobsCOM.Attachments2 oAtt = (SAPbobsCOM.Attachments2)B1Provider.oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oAttachments2);
+
+                string path = EditText0.Value;
+
+                    oAtt.Lines.SourcePath = Path.GetDirectoryName(path);
+                    oAtt.Lines.FileName = Path.GetFileNameWithoutExtension(path);
+                    oAtt.Lines.FileExtension = Path.GetExtension(path).Replace(".", "");                     
+                    oAtt.Lines.Add();
+                 
+
+                int oAttDocEntry = oAtt.Add();
+
+                if (oAttDocEntry == 0)
+                {
+                    oDocument.AttachmentEntry = oAttDocEntry;
+                }
+
+
+                #endregion
+
+                #region Exportto XML
+
+                //if (Config.ExportXML == "Y")
+                //{
+                //    string xml = oDocument.GetAsXML();
+
+
+                //}
+
+                #endregion
+
+
+                //Add the docuemnt
+                int j = oDocument.Add();
+              
+                if (j != 0)
+                {
+                    Application.SBO_Application.SetStatusBarMessage(B1Provider.oCompany.GetLastErrorDescription());
+                }
+                else
+                {
+                    Application.SBO_Application.SetStatusBarMessage("Document has been successfully posted",SAPbouiCOM.BoMessageTime.bmt_Medium,false);
+                }
                 #endregion
 
 

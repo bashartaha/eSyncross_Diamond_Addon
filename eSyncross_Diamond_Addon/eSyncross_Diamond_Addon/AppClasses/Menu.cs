@@ -21,6 +21,7 @@ namespace Diamond_Addon
 
                 B1Provider.CreateMenuItem("ESY_DIO", "ESY_DIO_PRD", "Produce", SAPbouiCOM.BoMenuType.mt_STRING, null, -1);
                 B1Provider.CreateMenuItem("ESY_DIO", "ESY_DIO_IMT", "Import From Excel", SAPbouiCOM.BoMenuType.mt_STRING, null, -1);
+                B1Provider.CreateMenuItem("ESY_DIO", "ESY_DIO_TAG", "Tag Inquiry", SAPbouiCOM.BoMenuType.mt_STRING, null, -1);
 
                 B1Provider.CreateMenuItem("ESY_DIO", "ESY_DIO_INI", "Initialize", SAPbouiCOM.BoMenuType.mt_STRING, null, -1);
 
@@ -79,6 +80,12 @@ namespace Diamond_Addon
                 if (pVal.BeforeAction == false & (pVal.BeforeAction == false && pVal.MenuUID == "ESY_DIO_IMT"))
                 {
                     ImportSerialNumbers form = new ImportSerialNumbers();
+                    form.Show();
+                }
+
+                if (pVal.BeforeAction == false & (pVal.BeforeAction == false && pVal.MenuUID == "ESY_DIO_TAG"))
+                {
+                    SerialNumberDetails form = new SerialNumberDetails();
                     form.Show();
                 }
 
