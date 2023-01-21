@@ -17,7 +17,7 @@ namespace Diamond_Addon
         
 
         public static SAPbouiCOM.EventFilters oFilters;   
-        private static string originalUserName="";
+    
 
         public static bool SetFilters()
         {
@@ -123,7 +123,15 @@ namespace Diamond_Addon
 
             try
             {
- 
+
+                if (BusinessObjectInfo.FormTypeEx == "65051")
+                {
+                    //SAPbouiCOM.Form serialForm = Application.SBO_Application.Forms.Item(BusinessObjectInfo.FormUID);
+                    //EvoAddon.Forms.SerialNumberDetails form = new EvoAddon.Forms.SerialNumberDetails();
+                    //form.Show();
+
+                    //serialForm.Close();
+                }
 
             }
             catch (Exception ex)
