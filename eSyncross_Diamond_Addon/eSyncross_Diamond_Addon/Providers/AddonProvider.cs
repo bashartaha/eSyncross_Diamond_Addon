@@ -88,6 +88,7 @@ namespace Diamond_Addon.Providers
             B1Provider.CreateUDF("OSRN", "TotalWeight", "Total Weight", BoFieldTypes.db_Float, BoFldSubTypes.st_Quantity, 0, null, null, null);
             B1Provider.CreateUDF("OSRN", "ReplacementCost", "Replacement Cost", BoFieldTypes.db_Float, BoFldSubTypes.st_Price, 0, null, null, null);
             B1Provider.CreateUDF("OSRN", "UOMCode", "UOM Code", BoFieldTypes.db_Alpha, BoFldSubTypes.st_None, 50, null, null, null);
+            B1Provider.CreateUDF("OSRN", "SalesPrice", "Sales Price", BoFieldTypes.db_Float, BoFldSubTypes.st_Price, 50, null, null, null);
 
 
 

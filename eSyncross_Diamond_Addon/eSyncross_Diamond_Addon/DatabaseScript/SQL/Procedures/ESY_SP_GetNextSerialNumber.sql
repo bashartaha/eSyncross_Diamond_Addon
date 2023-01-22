@@ -7,7 +7,7 @@ declare @serialnumber nvarchar(100);
 Select @serialnumber= max (DistNumber) from OSRN Where itemcode = @itemCode
 
 
-select SUBSTRING(@serialnumber,3,LEN(@serialnumber)-2) +1;
+select SUBSTRING(@serialnumber,3,LEN(@serialnumber)-2) ;
 end
 
 

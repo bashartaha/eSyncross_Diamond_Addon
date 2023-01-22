@@ -44,17 +44,17 @@ namespace Diamond_Addon.Providers
             }
         }
 
-        internal static string GetNextSerialNumber(string itemCode)
+        internal static int GetNextSerialNumber(string itemCode)
         {
             SAPbobsCOM.Recordset result = oRecordset($" EXEC ESY_SP_GetNextSerialNumber '{itemCode}'");
 
             if (result.RecordCount > 0)
             {
-                return  result.Fields.Item(0).Value.ToString();
+                return int.Parse(result.Fields.Item(0).Value.ToString());
             }
             else
             {
-                return null;
+                return 0;
             }
         }
 

@@ -143,13 +143,13 @@ namespace Diamond_Addon.Forms
             this.StaticText77 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_163").Specific));
             this.EditText82 = ((SAPbouiCOM.EditText)(this.GetItem("Item_164").Specific));
             this.StaticText78 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_165").Specific));
-            this.EditText85 = ((SAPbouiCOM.EditText)(this.GetItem("Item_170").Specific));
             this.StaticText81 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_171").Specific));
             this.Grid0 = ((SAPbouiCOM.Grid)(this.GetItem("Item_172").Specific));
             this.Folder0 = ((SAPbouiCOM.Folder)(this.GetItem("Item_1").Specific));
             this.Folder1 = ((SAPbouiCOM.Folder)(this.GetItem("Item_10").Specific));
             this.Folder2 = ((SAPbouiCOM.Folder)(this.GetItem("Item_11").Specific));
             this.ComboBox0 = ((SAPbouiCOM.ComboBox)(this.GetItem("Item_5").Specific));
+            this.ComboBox1 = ((SAPbouiCOM.ComboBox)(this.GetItem("Item_14").Specific));
             this.OnCustomInitialize();
 
         }
@@ -165,7 +165,19 @@ namespace Diamond_Addon.Forms
 
         private void OnCustomInitialize()
         {
+            try
+            {
+                EditText1.Item.SetAutoManagedAttribute(SAPbouiCOM.BoAutoManagedAttr.ama_Editable, (int)SAPbouiCOM.BoAutoFormMode.afm_Find, SAPbouiCOM.BoModeVisualBehavior.mvb_True);
+                EditText2.Item.SetAutoManagedAttribute(SAPbouiCOM.BoAutoManagedAttr.ama_Editable, (int)SAPbouiCOM.BoAutoFormMode.afm_Find, SAPbouiCOM.BoModeVisualBehavior.mvb_True);
+                EditText3.Item.SetAutoManagedAttribute(SAPbouiCOM.BoAutoManagedAttr.ama_Editable, (int)SAPbouiCOM.BoAutoFormMode.afm_Find, SAPbouiCOM.BoModeVisualBehavior.mvb_True);
+                EditText4.Item.SetAutoManagedAttribute(SAPbouiCOM.BoAutoManagedAttr.ama_Editable, (int)SAPbouiCOM.BoAutoFormMode.afm_Find, SAPbouiCOM.BoModeVisualBehavior.mvb_True);
 
+            }
+            catch (Exception ex)
+            {
+                Application.SBO_Application.SetStatusBarMessage(ex.Message);
+            }
+           
         }
 
         private SAPbouiCOM.StaticText StaticText0;
@@ -285,7 +297,6 @@ namespace Diamond_Addon.Forms
         private SAPbouiCOM.StaticText StaticText77;
         private SAPbouiCOM.EditText EditText82;
         private SAPbouiCOM.StaticText StaticText78;
-        private SAPbouiCOM.EditText EditText85;
         private SAPbouiCOM.StaticText StaticText81;
         private SAPbouiCOM.Grid Grid0;
         private SAPbouiCOM.Folder Folder0;
@@ -343,5 +354,6 @@ namespace Diamond_Addon.Forms
         }
 
         private SAPbouiCOM.ComboBox ComboBox0;
+        private SAPbouiCOM.ComboBox ComboBox1;
     }
 }
