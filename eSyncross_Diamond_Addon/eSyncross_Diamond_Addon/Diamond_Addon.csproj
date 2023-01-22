@@ -206,6 +206,8 @@
   <ItemGroup>
     <Content Include="DatabaseScript\HANA\Procedures\EVO_SP_GetAvailableQuantityInBins.sql" />
     <Content Include="DatabaseScript\HANA\Views\EVO_VW_SnBAvailableQtyinBins.sql" />
+    <Content Include="DatabaseScript\SQL\Procedures\ESY_SP_GetSerialDetail.sql" />
+    <Content Include="DatabaseScript\SQL\Procedures\ESY_SP_GetSerialTransactions.sql" />
     <Content Include="DatabaseScript\SQL\Procedures\ESY_SP_GetNextSerialNumber.sql" />
     <Content Include="DatabaseScript\SQL\Tables\ESY_GRPO.sql" />
     <Content Include="DatabaseScript\SQL\Views\ESY_VW_GRPO_LINES.sql" />

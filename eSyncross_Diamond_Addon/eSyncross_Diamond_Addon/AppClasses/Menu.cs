@@ -4,7 +4,7 @@ using System.Text;
 using SAPbouiCOM.Framework;
 using Diamond_Addon.Providers;
 using Diamond_Addon.Forms;
-using EvoAddon.Forms;
+using Diamond_Addon.Forms;
 
 namespace Diamond_Addon
 {

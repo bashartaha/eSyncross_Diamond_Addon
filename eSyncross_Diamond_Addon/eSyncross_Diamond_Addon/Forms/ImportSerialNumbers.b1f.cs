@@ -7,13 +7,13 @@ using Diamond_Addon.Providers;
 using System.IO;
 using CsvHelper;
 using System.Globalization;
-using EvoAddon.Providers;
+using Diamond_Addon.Providers;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Data.SqlClient;
 using System.Data;
 
-namespace EvoAddon.Forms
+namespace Diamond_Addon.Forms
 {
     [FormAttribute("ESY_DIO_IMT", "Forms/ImportSerialNumbers.b1f")]
     class ImportSerialNumbers : UserFormBase

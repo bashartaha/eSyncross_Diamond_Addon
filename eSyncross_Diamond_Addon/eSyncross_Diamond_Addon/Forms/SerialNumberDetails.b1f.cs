@@ -4,13 +4,21 @@ using System.Linq;
 using System.Text;
 using SAPbouiCOM.Framework;
 
-namespace EvoAddon.Forms
+namespace Diamond_Addon.Forms
 {
     [FormAttribute("EvoAddon.Forms.SerialNumberDetails", "Forms/SerialNumberDetails.b1f")]
     class SerialNumberDetails : UserFormBase
     {
         public SerialNumberDetails()
         {
+
+            try
+            {
+                Folder0.Select();
+            }catch(Exception ex)
+            {
+                Application.SBO_Application.SetStatusBarMessage(ex.Message);
+            }
         }
 
         /// <summary>
@@ -18,7 +26,6 @@ namespace EvoAddon.Forms
         /// </summary>
         public override void OnInitializeComponent()
         {
-            this.Folder0 = ((SAPbouiCOM.Folder)(this.GetItem("Item_1").Specific));
             this.StaticText0 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_2").Specific));
             this.StaticText1 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_3").Specific));
             this.StaticText2 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_4").Specific));
@@ -26,8 +33,6 @@ namespace EvoAddon.Forms
             this.StaticText5 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_7").Specific));
             this.StaticText6 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_8").Specific));
             this.StaticText7 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_9").Specific));
-            this.Folder1 = ((SAPbouiCOM.Folder)(this.GetItem("Item_10").Specific));
-            this.Folder2 = ((SAPbouiCOM.Folder)(this.GetItem("Item_11").Specific));
             this.Folder3 = ((SAPbouiCOM.Folder)(this.GetItem("Item_13").Specific));
             this.Button0 = ((SAPbouiCOM.Button)(this.GetItem("1").Specific));
             this.Button1 = ((SAPbouiCOM.Button)(this.GetItem("2").Specific));
@@ -42,7 +47,6 @@ namespace EvoAddon.Forms
             this.EditText6 = ((SAPbouiCOM.EditText)(this.GetItem("Item_24").Specific));
             this.EditText7 = ((SAPbouiCOM.EditText)(this.GetItem("Item_25").Specific));
             this.EditText8 = ((SAPbouiCOM.EditText)(this.GetItem("Item_26").Specific));
-            this.EditText9 = ((SAPbouiCOM.EditText)(this.GetItem("Item_27").Specific));
             this.StaticText9 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_28").Specific));
             this.StaticText10 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_29").Specific));
             this.StaticText11 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_30").Specific));
@@ -66,36 +70,16 @@ namespace EvoAddon.Forms
             this.EditText18 = ((SAPbouiCOM.EditText)(this.GetItem("Item_63").Specific));
             this.EditText19 = ((SAPbouiCOM.EditText)(this.GetItem("Item_64").Specific));
             this.EditText20 = ((SAPbouiCOM.EditText)(this.GetItem("Item_65").Specific));
-            this.EditText21 = ((SAPbouiCOM.EditText)(this.GetItem("Item_66").Specific));
             this.EditText22 = ((SAPbouiCOM.EditText)(this.GetItem("Item_67").Specific));
             this.EditText23 = ((SAPbouiCOM.EditText)(this.GetItem("Item_68").Specific));
             this.EditText24 = ((SAPbouiCOM.EditText)(this.GetItem("Item_69").Specific));
             this.EditText25 = ((SAPbouiCOM.EditText)(this.GetItem("Item_70").Specific));
             this.EditText26 = ((SAPbouiCOM.EditText)(this.GetItem("Item_71").Specific));
-            this.EditText27 = ((SAPbouiCOM.EditText)(this.GetItem("Item_72").Specific));
-            this.EditText28 = ((SAPbouiCOM.EditText)(this.GetItem("Item_73").Specific));
-            this.EditText29 = ((SAPbouiCOM.EditText)(this.GetItem("Item_74").Specific));
-            this.EditText30 = ((SAPbouiCOM.EditText)(this.GetItem("Item_75").Specific));
-            this.EditText31 = ((SAPbouiCOM.EditText)(this.GetItem("Item_76").Specific));
-            this.EditText32 = ((SAPbouiCOM.EditText)(this.GetItem("Item_77").Specific));
-            this.EditText33 = ((SAPbouiCOM.EditText)(this.GetItem("Item_78").Specific));
-            this.EditText34 = ((SAPbouiCOM.EditText)(this.GetItem("Item_79").Specific));
-            this.EditText35 = ((SAPbouiCOM.EditText)(this.GetItem("Item_80").Specific));
-            this.StaticText41 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_81").Specific));
             this.StaticText42 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_82").Specific));
             this.StaticText43 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_83").Specific));
             this.StaticText44 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_84").Specific));
             this.StaticText45 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_85").Specific));
             this.StaticText46 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_86").Specific));
-            this.StaticText47 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_87").Specific));
-            this.StaticText48 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_88").Specific));
-            this.StaticText49 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_89").Specific));
-            this.StaticText50 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_90").Specific));
-            this.StaticText51 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_91").Specific));
-            this.StaticText52 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_92").Specific));
-            this.StaticText53 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_93").Specific));
-            this.StaticText54 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_94").Specific));
-            this.StaticText55 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_95").Specific));
             this.StaticText56 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_96").Specific));
             this.StaticText57 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_97").Specific));
             this.StaticText58 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_98").Specific));
@@ -112,27 +96,22 @@ namespace EvoAddon.Forms
             this.EditText42 = ((SAPbouiCOM.EditText)(this.GetItem("Item_109").Specific));
             this.EditText43 = ((SAPbouiCOM.EditText)(this.GetItem("Item_110").Specific));
             this.EditText44 = ((SAPbouiCOM.EditText)(this.GetItem("Item_111").Specific));
-            this.EditText45 = ((SAPbouiCOM.EditText)(this.GetItem("Item_112").Specific));
             this.EditText46 = ((SAPbouiCOM.EditText)(this.GetItem("Item_113").Specific));
             this.EditText47 = ((SAPbouiCOM.EditText)(this.GetItem("Item_114").Specific));
             this.EditText48 = ((SAPbouiCOM.EditText)(this.GetItem("Item_115").Specific));
             this.EditText49 = ((SAPbouiCOM.EditText)(this.GetItem("Item_116").Specific));
-            this.EditText50 = ((SAPbouiCOM.EditText)(this.GetItem("Item_117").Specific));
             this.EditText51 = ((SAPbouiCOM.EditText)(this.GetItem("Item_118").Specific));
             this.EditText52 = ((SAPbouiCOM.EditText)(this.GetItem("Item_119").Specific));
             this.EditText53 = ((SAPbouiCOM.EditText)(this.GetItem("Item_120").Specific));
             this.EditText54 = ((SAPbouiCOM.EditText)(this.GetItem("Item_121").Specific));
-            this.EditText55 = ((SAPbouiCOM.EditText)(this.GetItem("Item_122").Specific));
             this.EditText56 = ((SAPbouiCOM.EditText)(this.GetItem("Item_123").Specific));
             this.EditText57 = ((SAPbouiCOM.EditText)(this.GetItem("Item_124").Specific));
             this.EditText58 = ((SAPbouiCOM.EditText)(this.GetItem("Item_125").Specific));
             this.EditText59 = ((SAPbouiCOM.EditText)(this.GetItem("Item_126").Specific));
-            this.EditText60 = ((SAPbouiCOM.EditText)(this.GetItem("Item_127").Specific));
             this.EditText61 = ((SAPbouiCOM.EditText)(this.GetItem("Item_128").Specific));
             this.EditText62 = ((SAPbouiCOM.EditText)(this.GetItem("Item_129").Specific));
             this.EditText63 = ((SAPbouiCOM.EditText)(this.GetItem("Item_130").Specific));
             this.EditText64 = ((SAPbouiCOM.EditText)(this.GetItem("Item_131").Specific));
-            this.EditText65 = ((SAPbouiCOM.EditText)(this.GetItem("Item_132").Specific));
             this.EditText66 = ((SAPbouiCOM.EditText)(this.GetItem("Item_133").Specific));
             this.EditText67 = ((SAPbouiCOM.EditText)(this.GetItem("Item_134").Specific));
             this.EditText68 = ((SAPbouiCOM.EditText)(this.GetItem("Item_135").Specific));
@@ -164,13 +143,13 @@ namespace EvoAddon.Forms
             this.StaticText77 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_163").Specific));
             this.EditText82 = ((SAPbouiCOM.EditText)(this.GetItem("Item_164").Specific));
             this.StaticText78 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_165").Specific));
-            this.EditText83 = ((SAPbouiCOM.EditText)(this.GetItem("Item_166").Specific));
-            this.StaticText79 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_167").Specific));
-            this.EditText84 = ((SAPbouiCOM.EditText)(this.GetItem("Item_168").Specific));
-            this.StaticText80 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_169").Specific));
             this.EditText85 = ((SAPbouiCOM.EditText)(this.GetItem("Item_170").Specific));
             this.StaticText81 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_171").Specific));
             this.Grid0 = ((SAPbouiCOM.Grid)(this.GetItem("Item_172").Specific));
+            this.Folder0 = ((SAPbouiCOM.Folder)(this.GetItem("Item_1").Specific));
+            this.Folder1 = ((SAPbouiCOM.Folder)(this.GetItem("Item_10").Specific));
+            this.Folder2 = ((SAPbouiCOM.Folder)(this.GetItem("Item_11").Specific));
+            this.ComboBox0 = ((SAPbouiCOM.ComboBox)(this.GetItem("Item_5").Specific));
             this.OnCustomInitialize();
 
         }
@@ -180,9 +159,9 @@ namespace EvoAddon.Forms
         /// </summary>
         public override void OnInitializeFormEvents()
         {
-        }
+            this.DataLoadAfter += new DataLoadAfterHandler(this.Form_DataLoadAfter);
 
-        private SAPbouiCOM.Folder Folder0;
+        }
 
         private void OnCustomInitialize()
         {
@@ -196,8 +175,6 @@ namespace EvoAddon.Forms
         private SAPbouiCOM.StaticText StaticText5;
         private SAPbouiCOM.StaticText StaticText6;
         private SAPbouiCOM.StaticText StaticText7;
-        private SAPbouiCOM.Folder Folder1;
-        private SAPbouiCOM.Folder Folder2;
         private SAPbouiCOM.Folder Folder3;
         private SAPbouiCOM.Button Button0;
         private SAPbouiCOM.Button Button1;
@@ -212,7 +189,6 @@ namespace EvoAddon.Forms
         private SAPbouiCOM.EditText EditText6;
         private SAPbouiCOM.EditText EditText7;
         private SAPbouiCOM.EditText EditText8;
-        private SAPbouiCOM.EditText EditText9;
         private SAPbouiCOM.StaticText StaticText9;
         private SAPbouiCOM.StaticText StaticText10;
         private SAPbouiCOM.StaticText StaticText11;
@@ -236,36 +212,16 @@ namespace EvoAddon.Forms
         private SAPbouiCOM.EditText EditText18;
         private SAPbouiCOM.EditText EditText19;
         private SAPbouiCOM.EditText EditText20;
-        private SAPbouiCOM.EditText EditText21;
         private SAPbouiCOM.EditText EditText22;
         private SAPbouiCOM.EditText EditText23;
         private SAPbouiCOM.EditText EditText24;
         private SAPbouiCOM.EditText EditText25;
         private SAPbouiCOM.EditText EditText26;
-        private SAPbouiCOM.EditText EditText27;
-        private SAPbouiCOM.EditText EditText28;
-        private SAPbouiCOM.EditText EditText29;
-        private SAPbouiCOM.EditText EditText30;
-        private SAPbouiCOM.EditText EditText31;
-        private SAPbouiCOM.EditText EditText32;
-        private SAPbouiCOM.EditText EditText33;
-        private SAPbouiCOM.EditText EditText34;
-        private SAPbouiCOM.EditText EditText35;
-        private SAPbouiCOM.StaticText StaticText41;
         private SAPbouiCOM.StaticText StaticText42;
         private SAPbouiCOM.StaticText StaticText43;
         private SAPbouiCOM.StaticText StaticText44;
         private SAPbouiCOM.StaticText StaticText45;
         private SAPbouiCOM.StaticText StaticText46;
-        private SAPbouiCOM.StaticText StaticText47;
-        private SAPbouiCOM.StaticText StaticText48;
-        private SAPbouiCOM.StaticText StaticText49;
-        private SAPbouiCOM.StaticText StaticText50;
-        private SAPbouiCOM.StaticText StaticText51;
-        private SAPbouiCOM.StaticText StaticText52;
-        private SAPbouiCOM.StaticText StaticText53;
-        private SAPbouiCOM.StaticText StaticText54;
-        private SAPbouiCOM.StaticText StaticText55;
         private SAPbouiCOM.StaticText StaticText56;
         private SAPbouiCOM.StaticText StaticText57;
         private SAPbouiCOM.StaticText StaticText58;
@@ -282,27 +238,22 @@ namespace EvoAddon.Forms
         private SAPbouiCOM.EditText EditText42;
         private SAPbouiCOM.EditText EditText43;
         private SAPbouiCOM.EditText EditText44;
-        private SAPbouiCOM.EditText EditText45;
         private SAPbouiCOM.EditText EditText46;
         private SAPbouiCOM.EditText EditText47;
         private SAPbouiCOM.EditText EditText48;
         private SAPbouiCOM.EditText EditText49;
-        private SAPbouiCOM.EditText EditText50;
         private SAPbouiCOM.EditText EditText51;
         private SAPbouiCOM.EditText EditText52;
         private SAPbouiCOM.EditText EditText53;
         private SAPbouiCOM.EditText EditText54;
-        private SAPbouiCOM.EditText EditText55;
         private SAPbouiCOM.EditText EditText56;
         private SAPbouiCOM.EditText EditText57;
         private SAPbouiCOM.EditText EditText58;
         private SAPbouiCOM.EditText EditText59;
-        private SAPbouiCOM.EditText EditText60;
         private SAPbouiCOM.EditText EditText61;
         private SAPbouiCOM.EditText EditText62;
         private SAPbouiCOM.EditText EditText63;
         private SAPbouiCOM.EditText EditText64;
-        private SAPbouiCOM.EditText EditText65;
         private SAPbouiCOM.EditText EditText66;
         private SAPbouiCOM.EditText EditText67;
         private SAPbouiCOM.EditText EditText68;
@@ -334,12 +285,63 @@ namespace EvoAddon.Forms
         private SAPbouiCOM.StaticText StaticText77;
         private SAPbouiCOM.EditText EditText82;
         private SAPbouiCOM.StaticText StaticText78;
-        private SAPbouiCOM.EditText EditText83;
-        private SAPbouiCOM.StaticText StaticText79;
-        private SAPbouiCOM.EditText EditText84;
-        private SAPbouiCOM.StaticText StaticText80;
         private SAPbouiCOM.EditText EditText85;
         private SAPbouiCOM.StaticText StaticText81;
         private SAPbouiCOM.Grid Grid0;
+        private SAPbouiCOM.Folder Folder0;
+        private SAPbouiCOM.Folder Folder1;
+        private SAPbouiCOM.Folder Folder2;
+
+        private void Form_DataLoadAfter(ref SAPbouiCOM.BusinessObjectInfo pVal)
+        {
+            UIAPIRawForm.Freeze(true);
+            try
+            {
+                Grid0.DataTable.ExecuteQuery($"Exec ESY_SP_GetSerialTransactions '{EditText1.Value}'");
+
+              SAPbobsCOM.Recordset oRecordset = Diamond_Addon.Providers.B1Provider.oRecordset($"Exec ESY_SP_GetSerialDetail '{EditText1.Value}'");
+
+                if (oRecordset.RecordCount > 0)
+                {
+                    EditText4.Value = oRecordset.Fields.Item("TaggingDefinition").Value.ToString();
+                  ComboBox0.Select( oRecordset.Fields.Item("Status").Value.ToString(),SAPbouiCOM.BoSearchKey.psk_ByValue); 
+                    EditText10.Value = oRecordset.Fields.Item("Category").Value.ToString();
+                    EditText11.Value = oRecordset.Fields.Item("Design").Value.ToString();
+                    EditText12.Value = oRecordset.Fields.Item("Style").Value.ToString();
+                    EditText13.Value = oRecordset.Fields.Item("DesignGroup").Value.ToString();
+                    EditText14.Value = oRecordset.Fields.Item("SubCategory").Value.ToString();
+                    EditText15.Value = oRecordset.Fields.Item("Brand").Value.ToString();
+                    EditText20.Value = oRecordset.Fields.Item("Occation").Value.ToString();
+
+                    EditText26.Value = oRecordset.Fields.Item("CurrentLocation").Value.ToString();
+
+                }
+
+
+
+                double v1 = 0, v2 = 0, v3 = 0, v4 = 0;
+                double.TryParse(EditText66.Value.ToString(), out v1);
+                double.TryParse(EditText67.Value.ToString(), out v2);
+                double.TryParse(EditText68.Value.ToString(), out v3);
+                double.TryParse(EditText69.Value.ToString(), out v4);
+
+                EditText70.Value = (v1 + v2 + v3 + v4).ToString();
+
+
+                double.TryParse(EditText36.Value.ToString(), out v1);
+                double.TryParse(EditText37.Value.ToString(), out v2);
+                double.TryParse(EditText38.Value.ToString(), out v3);
+                double.TryParse(EditText39.Value.ToString(), out v4);
+
+                EditText40.Value = (v1 + v2 + v3 + v4).ToString();
+            }
+            catch(Exception ex)
+            {
+                Application.SBO_Application.SetStatusBarMessage(ex.Message);
+            }
+            UIAPIRawForm.Freeze(false);
+        }
+
+        private SAPbouiCOM.ComboBox ComboBox0;
     }
 }

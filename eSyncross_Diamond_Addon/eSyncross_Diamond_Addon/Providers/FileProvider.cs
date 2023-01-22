@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data;
 
-namespace EvoAddon.Providers
+namespace Diamond_Addon.Providers
 {
     class FileProvider
     {

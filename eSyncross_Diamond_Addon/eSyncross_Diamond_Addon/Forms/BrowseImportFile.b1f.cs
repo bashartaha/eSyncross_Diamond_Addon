@@ -12,7 +12,7 @@ using System.Data.SqlClient;
 using System.Data;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using EvoAddon.Providers;
+using Diamond_Addon.Providers;
 
 namespace Diamond_Addon.Forms
 {
