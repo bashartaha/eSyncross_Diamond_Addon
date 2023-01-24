@@ -98,6 +98,90 @@ namespace Diamond_Addon.Providers
 
             B1Provider.CreateUDF("OPDN", "ESY_StockType", "Stock Type", BoFieldTypes.db_Alpha, BoFldSubTypes.st_None, 20, ConsignmentArray, "1", null);
             B1Provider.CreateUDF("OWHS", "ESY_StockType", "Stock Type", BoFieldTypes.db_Alpha, BoFldSubTypes.st_None, 20, ConsignmentArray, "1", null);
+
+
+            #region ESY_OWOR
+            Table ESY_OWOR = new Table("ESY_OWOR", "ESY_OWOR");
+            ESY_OWOR.TableType = SAPbobsCOM.BoUTBTableType.bott_Document;
+            ESY_OWOR.FieldsList = new List<UserDefinedField>();
+ 
+            ESY_OWOR.FieldsList.Add(new UserDefinedField("@ESY_OWOR", "CardCode", "BP Code", SAPbobsCOM.BoFieldTypes.db_Alpha, SAPbobsCOM.BoFldSubTypes.st_None, 200, null, null, null));
+            ESY_OWOR.FieldsList.Add(new UserDefinedField("@ESY_OWOR", "CardName", "BP Name", SAPbobsCOM.BoFieldTypes.db_Alpha, SAPbobsCOM.BoFldSubTypes.st_None, 200, null, null, null));
+            ESY_OWOR.FieldsList.Add(new UserDefinedField("@ESY_OWOR", "TotalExpense", "TotalExpense", SAPbobsCOM.BoFieldTypes.db_Float, SAPbobsCOM.BoFldSubTypes.st_Price, 0, null, null, null));
+
+            ESY_OWOR.FieldsList.Add(new UserDefinedField("@ESY_OWOR", "GI_Entry", "GI_Entry", SAPbobsCOM.BoFieldTypes.db_Alpha, SAPbobsCOM.BoFldSubTypes.st_None, 50, null, null, null));
+            ESY_OWOR.FieldsList.Add(new UserDefinedField("@ESY_OWOR", "GR_Entry", "GR_Entry", SAPbobsCOM.BoFieldTypes.db_Alpha, SAPbobsCOM.BoFldSubTypes.st_None, 50, null, null, null));
+          
+            B1Provider.Build_UDTs_And_UDFs(ESY_OWOR);
+
+
+            #region ESY_WOR1
+
+            Table ESY_WOR1 = new Table("ESY_WOR1", "ESY_WOR1");
+            ESY_WOR1.TableType = SAPbobsCOM.BoUTBTableType.bott_DocumentLines;
+            ESY_WOR1.FieldsList = new List<UserDefinedField>();
+
+            ESY_WOR1.FieldsList.Add(new UserDefinedField("@ESY_WOR1", "Serial", "Serial", SAPbobsCOM.BoFieldTypes.db_Alpha, SAPbobsCOM.BoFldSubTypes.st_None, 50, null, null, null));
+            ESY_WOR1.FieldsList.Add(new UserDefinedField("@ESY_WOR1", "ItemCode", "ItemCode", SAPbobsCOM.BoFieldTypes.db_Alpha, SAPbobsCOM.BoFldSubTypes.st_None, 50, null, null, null));
+            ESY_WOR1.FieldsList.Add(new UserDefinedField("@ESY_WOR1", "ItemName ", "Item Name ", SAPbobsCOM.BoFieldTypes.db_Alpha, SAPbobsCOM.BoFldSubTypes.st_None, 200, null, null, null));
+
+            ESY_WOR1.FieldsList.Add(new UserDefinedField("@ESY_WOR1", "ItemCost ", "ItemCost", SAPbobsCOM.BoFieldTypes.db_Float, SAPbobsCOM.BoFldSubTypes.st_Price, 0, null, null, null));
+            ESY_WOR1.FieldsList.Add(new UserDefinedField("@ESY_WOR1", "Quantity ", "Quantity", SAPbobsCOM.BoFieldTypes.db_Float, SAPbobsCOM.BoFldSubTypes.st_Quantity, 0, null, null, null));
+            ESY_WOR1.FieldsList.Add(new UserDefinedField("@ESY_WOR1", "WhseCode ", "WhseCode", SAPbobsCOM.BoFieldTypes.db_Alpha, SAPbobsCOM.BoFldSubTypes.st_None, 10, null, null, null));
+
+
+
+            B1Provider.Build_UDTs_And_UDFs(ESY_WOR1);
+
+            #endregion
+
+            #region ESY_WOR2
+
+            Table ESY_WOR2 = new Table("ESY_WOR2", "ESY_WOR2");
+            ESY_WOR2.TableType = SAPbobsCOM.BoUTBTableType.bott_DocumentLines;
+            ESY_WOR2.FieldsList = new List<UserDefinedField>();
+
+            ESY_WOR2.FieldsList.Add(new UserDefinedField("@ESY_WOR2", "Serial", "Serial", SAPbobsCOM.BoFieldTypes.db_Alpha, SAPbobsCOM.BoFldSubTypes.st_None, 50, null, null, null));
+            ESY_WOR2.FieldsList.Add(new UserDefinedField("@ESY_WOR2", "ItemCode", "ItemCode", SAPbobsCOM.BoFieldTypes.db_Alpha, SAPbobsCOM.BoFldSubTypes.st_None, 50, null, null, null));
+            ESY_WOR2.FieldsList.Add(new UserDefinedField("@ESY_WOR2", "ItemName ", "Item Name ", SAPbobsCOM.BoFieldTypes.db_Alpha, SAPbobsCOM.BoFldSubTypes.st_None, 200, null, null, null));
+
+            ESY_WOR2.FieldsList.Add(new UserDefinedField("@ESY_WOR2", "ItemCost ", "ItemCost", SAPbobsCOM.BoFieldTypes.db_Float, SAPbobsCOM.BoFldSubTypes.st_Price, 0, null, null, null));
+            ESY_WOR2.FieldsList.Add(new UserDefinedField("@ESY_WOR2", "Quantity ", "Quantity", SAPbobsCOM.BoFieldTypes.db_Float, SAPbobsCOM.BoFldSubTypes.st_Quantity, 0, null, null, null));
+            ESY_WOR2.FieldsList.Add(new UserDefinedField("@ESY_WOR2", "WhseCode ", "WhseCode", SAPbobsCOM.BoFieldTypes.db_Alpha, SAPbobsCOM.BoFldSubTypes.st_None, 10, null, null, null));
+
+
+
+            B1Provider.Build_UDTs_And_UDFs(ESY_WOR2);
+
+            #endregion
+
+            #region Object
+
+
+            UserDefinedObject Obj_ESY_OWOR= new UserDefinedObject();
+
+            Obj_ESY_OWOR.Table = ESY_OWOR;
+            Obj_ESY_OWOR.ObjType = SAPbobsCOM.BoUDOObjType.boud_Document;
+            Obj_ESY_OWOR.AllowFind = SAPbobsCOM.BoYesNoEnum.tYES;
+            Obj_ESY_OWOR.AllowClose = SAPbobsCOM.BoYesNoEnum.tYES;
+          
+
+            Obj_ESY_OWOR.FindColumns = new string[] { "U_CardCode", "U_CardName", "DocEntry", "DocNum", "Status", "Canceled", "U_GI_Entry", "U_GR_Entry" };
+
+            Obj_ESY_OWOR.AllowCreateDafultForm = SAPbobsCOM.BoYesNoEnum.tNO;
+            Obj_ESY_OWOR.EnableEnhancedForm = SAPbobsCOM.BoYesNoEnum.tNO;
+
+
+            Obj_ESY_OWOR.CanLog = SAPbobsCOM.BoYesNoEnum.tNO;
+            Obj_ESY_OWOR.Childs = new List<Table>();
+            Obj_ESY_OWOR.Childs.Add(ESY_WOR1);
+            Obj_ESY_OWOR.Childs.Add(ESY_WOR2);
+           
+            B1Provider.Build_UDO(Obj_ESY_OWOR);
+
+
+            #endregion
+            #endregion
         }
 
 

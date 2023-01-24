@@ -5,6 +5,7 @@ using SAPbouiCOM.Framework;
 using Diamond_Addon.Providers;
 using Diamond_Addon.Forms;
 using Diamond_Addon.Forms;
+using EvoAddon.Forms;
 
 namespace Diamond_Addon
 {
@@ -72,8 +73,9 @@ namespace Diamond_Addon
 
 
                 if (pVal.BeforeAction == false & (pVal.BeforeAction == false && pVal.MenuUID == "ESY_DIO_PRD"))
-                { 
-
+                {
+                    ProductionScreen form = new ProductionScreen();
+                    form.Show();
                 }
 
 
@@ -85,7 +87,7 @@ namespace Diamond_Addon
 
                 if (pVal.BeforeAction == false & (pVal.BeforeAction == false && pVal.MenuUID == "ESY_DIO_TAG"))
                 {
-                    SerialNumberDetails form = new SerialNumberDetails();
+                    SerialNumberDetails form = new SerialNumberDetails(null);
                     form.Show();
                 }
 

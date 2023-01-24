@@ -3,22 +3,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SAPbouiCOM.Framework;
+using Diamond_Addon.Providers;
 
 namespace Diamond_Addon.Forms
 {
     [FormAttribute("EvoAddon.Forms.SerialNumberDetails", "Forms/SerialNumberDetails.b1f")]
     class SerialNumberDetails : UserFormBase
     {
-        public SerialNumberDetails()
+        string AbsEntry = null;
+        public SerialNumberDetails(string absEntry)
         {
-
+            UIAPIRawForm.Freeze(true);
             try
             {
+                AbsEntry = absEntry;
+
                 Folder0.Select();
-            }catch(Exception ex)
+
+                if (AbsEntry != null)
+                {
+                    UIAPIRawForm.Mode = SAPbouiCOM.BoFormMode.fm_FIND_MODE;
+                    EditText1.Value = absEntry;
+                    Button0.Item.Click();
+                    
+                }
+
+            }
+            catch(Exception ex)
             {
                 Application.SBO_Application.SetStatusBarMessage(ex.Message);
             }
+            UIAPIRawForm.Freeze(false);
         }
 
         /// <summary>

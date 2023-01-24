@@ -555,10 +555,7 @@ namespace Diamond_Addon.Forms
 
                     oBar = (SAPbouiCOM.ProgressBar)Application.SBO_Application.StatusBar.CreateProgressBar("Please wait", 100, false);
                 }
-
-
-
-
+                 
                 #region Posting
 
                 SAPbobsCOM.Recordset records = B1Provider.oRecordset("Select * from \"ESY_GRPO\"");
@@ -726,6 +723,7 @@ namespace Diamond_Addon.Forms
                 else
                 {
                     Application.SBO_Application.SetStatusBarMessage("Document has been successfully posted", SAPbouiCOM.BoMessageTime.bmt_Medium, false);
+                    Button1.Item.Visible = false;
                 }
                 #endregion
 
