@@ -107,6 +107,8 @@ namespace Diamond_Addon.Providers
  
             ESY_OWOR.FieldsList.Add(new UserDefinedField("@ESY_OWOR", "CardCode", "BP Code", SAPbobsCOM.BoFieldTypes.db_Alpha, SAPbobsCOM.BoFldSubTypes.st_None, 200, null, null, null));
             ESY_OWOR.FieldsList.Add(new UserDefinedField("@ESY_OWOR", "CardName", "BP Name", SAPbobsCOM.BoFieldTypes.db_Alpha, SAPbobsCOM.BoFldSubTypes.st_None, 200, null, null, null));
+            ESY_OWOR.FieldsList.Add(new UserDefinedField("@ESY_OWOR", "NumAtCard", "NumAtCard", SAPbobsCOM.BoFieldTypes.db_Alpha, SAPbobsCOM.BoFldSubTypes.st_None, 200, null, null, null));
+            ESY_OWOR.FieldsList.Add(new UserDefinedField("@ESY_OWOR", "Remarks", "Remarks", SAPbobsCOM.BoFieldTypes.db_Alpha, SAPbobsCOM.BoFldSubTypes.st_None, 254, null, null, null));
             ESY_OWOR.FieldsList.Add(new UserDefinedField("@ESY_OWOR", "TotalExpense", "TotalExpense", SAPbobsCOM.BoFieldTypes.db_Float, SAPbobsCOM.BoFldSubTypes.st_Price, 0, null, null, null));
 
             ESY_OWOR.FieldsList.Add(new UserDefinedField("@ESY_OWOR", "GI_Entry", "GI_Entry", SAPbobsCOM.BoFieldTypes.db_Alpha, SAPbobsCOM.BoFldSubTypes.st_None, 50, null, null, null));
