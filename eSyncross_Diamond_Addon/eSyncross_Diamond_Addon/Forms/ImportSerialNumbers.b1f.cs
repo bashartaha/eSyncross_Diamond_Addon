@@ -24,6 +24,7 @@ namespace Diamond_Addon.Forms
         {
             try
             {
+                ComboBox0.Select(0, SAPbouiCOM.BoSearchKey.psk_Index);
                 ComboBox1.Select(0, SAPbouiCOM.BoSearchKey.psk_Index);
                 EditText4.Value = DateTime.Now.ToString("yyyyMMdd");
 
@@ -96,6 +97,9 @@ namespace Diamond_Addon.Forms
             this.LinkedButton0 = ((SAPbouiCOM.LinkedButton)(this.GetItem("Item_37").Specific));
             this.StaticText14 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_20").Specific));
             this.ComboBox2 = ((SAPbouiCOM.ComboBox)(this.GetItem("Item_22").Specific));
+            this.EditText12 = ((SAPbouiCOM.EditText)(this.GetItem("Item_28").Specific));
+            this.EditText12.ChooseFromListAfter += new SAPbouiCOM._IEditTextEvents_ChooseFromListAfterEventHandler(this.EditText12_ChooseFromListAfter);
+            this.EditText12.ChooseFromListBefore += new SAPbouiCOM._IEditTextEvents_ChooseFromListBeforeEventHandler(this.EditText12_ChooseFromListBefore);
             this.OnCustomInitialize();
 
         }
@@ -259,7 +263,7 @@ namespace Diamond_Addon.Forms
             {
                 if (string.IsNullOrEmpty(ComboBox0.Value))
                 {
-                    Application.SBO_Application.SetStatusBarMessage("Sock Type must be selected", SAPbouiCOM.BoMessageTime.bmt_Medium, true);
+                    Application.SBO_Application.SetStatusBarMessage("Stock type must be selected", SAPbouiCOM.BoMessageTime.bmt_Medium, true);
                     return;
                 }
                 if (string.IsNullOrEmpty(EditText1.Value))
@@ -279,128 +283,131 @@ namespace Diamond_Addon.Forms
                     if (!string.IsNullOrEmpty(dialog.SelectedFile))
                     {
                         EditText0.Value = dialog.SelectedFile;
-                    }
-                    else
-                    {
-                        return;
-                    }
 
 
-                    // Clean Matrix 
 
-                    // add new row as the matrix is empty
+                        // Clean Matrix 
+
+                        // add new row as the matrix is empty
 
 
-                    //read csv
-                    dt = new System.Data.DataTable();
+                        //read csv
+                        dt = new System.Data.DataTable();
 
-                    if (Path.GetExtension(dialog.SelectedFile).ToLower() == ".csv")
-                    {
-                        using (var reader = new StreamReader(dialog.SelectedFile))
-                        using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+                        if (Path.GetExtension(dialog.SelectedFile).ToLower() == ".csv")
                         {
-                            using (var dr = new CsvDataReader(csv))
+                            using (var reader = new StreamReader(dialog.SelectedFile))
+                            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
                             {
-                                dt.Load(dr);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        dt = FileProvider.ReadExcel(dialog.SelectedFile);
-                    }
-
-
-                    // dt.Columns.Add(new DataColumn("DocNum", typeof(String)));
-                    //dt.Rows.Cast<DataRow>().ToList().ForEach(x => x["DocNum"] = docNum);
-
-                    B1Provider.oRecordset("Delete from \"ESY_GRPO\" ");
-
-                    dt.TableName = "ESY_GRPO";
-
-                    var json = JsonConvert.SerializeObject(dt);
-                    List<JObject> jsonObjects = JsonConvert.DeserializeObject<List<JObject>>(json);
-
-
-                    using (SqlConnection connection = new SqlConnection(string.Format("Data Source={0};User ID={1};Password={2};Integrated security=False;database={3}", B1Provider.oCompany.Server, "sa", "1234", B1Provider.oCompany.CompanyDB)))
-                    {
-                        // open transection
-                        connection.Open();
-                        using (var transaction = connection.BeginTransaction())
-                        {
-                            try
-                            {
-                                using (SqlCommand command = new SqlCommand())
+                                using (var dr = new CsvDataReader(csv))
                                 {
-                                    command.Connection = connection;
-                                    command.Transaction = transaction;
-                                    command.CommandType = CommandType.Text;
-                                    foreach (JObject obj in jsonObjects)
-                                    {
-
-                                        // Get the column names and values
-                                        var columns = obj.Properties().Select(p => new
-                                        {
-                                            Name = p.Name,
-                                            Value = ConvertValue(p.Value)
-                                        });
-                                        var columnNames = string.Join(",", columns.Where(w => w.Value != null && !string.IsNullOrEmpty(w.Value.ToString())).Select(c => c.Name));
-                                        var parameterNames = string.Join(",", columns.Where(w => w.Value != null && !string.IsNullOrEmpty(w.Value.ToString())).Select(c => c.Value));
-
-                                        string insertCommand = $"INSERT INTO \"ESY_GRPO\" ({columnNames}) VALUES ({parameterNames})";
-
-                                        command.CommandText = insertCommand;
-                                        command.ExecuteNonQuery();
-
-                                    }
-                                    //commit transection
-                                    transaction.Commit();
+                                    dt.Load(dr);
                                 }
                             }
-                            catch (Exception ex)
-                            {
-                                //rollback transection
-                                transaction.Rollback();
-
-                                throw;
-
-                            }
+                        }
+                        else
+                        {
+                            dt = FileProvider.ReadExcel(dialog.SelectedFile);
                         }
 
+
+                        // dt.Columns.Add(new DataColumn("DocNum", typeof(String)));
+                        //dt.Rows.Cast<DataRow>().ToList().ForEach(x => x["DocNum"] = docNum);
+
+                        B1Provider.oRecordset("Delete from \"ESY_GRPO\" ");
+
+                        dt.TableName = "ESY_GRPO";
+
+                        var json = JsonConvert.SerializeObject(dt);
+                        List<JObject> jsonObjects = JsonConvert.DeserializeObject<List<JObject>>(json);
+
+                        string dbuserName = "sa";
+                        if(B1Provider.oCompany.DbServerType == SAPbobsCOM.BoDataServerTypes.dst_HANADB)
+                        {
+                            dbuserName = "SYSTEM";
+                        }
+                        using (SqlConnection connection = new SqlConnection(string.Format("Data Source={0};User ID={1};Password={2};Integrated security=False;database={3}", B1Provider.oCompany.Server, dbuserName, B1Provider.getServerPassword(), B1Provider.oCompany.CompanyDB)))
+                        {
+                            // open transection
+                            connection.Open();
+                            using (var transaction = connection.BeginTransaction())
+                            {
+                                try
+                                {
+                                    using (SqlCommand command = new SqlCommand())
+                                    {
+                                        command.Connection = connection;
+                                        command.Transaction = transaction;
+                                        command.CommandType = CommandType.Text;
+                                        foreach (JObject obj in jsonObjects)
+                                        {
+
+                                            // Get the column names and values
+                                            var columns = obj.Properties().Select(p => new
+                                            {
+                                                Name = p.Name,
+                                                Value = ConvertValue(p.Value)
+                                            });
+                                            var columnNames = string.Join(",", columns.Where(w => w.Value != null && !string.IsNullOrEmpty(w.Value.ToString())).Select(c => c.Name));
+                                            var parameterNames = string.Join(",", columns.Where(w => w.Value != null && !string.IsNullOrEmpty(w.Value.ToString())).Select(c => c.Value));
+
+                                            string insertCommand = $"INSERT INTO \"ESY_GRPO\" ({columnNames}) VALUES ({parameterNames})";
+
+                                            command.CommandText = insertCommand;
+                                            command.ExecuteNonQuery();
+
+                                        }
+                                        //commit transection
+                                        transaction.Commit();
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    //rollback transection
+                                    transaction.Rollback();
+
+                                    throw;
+
+                                }
+                            }
+
+                        }
+
+                        SAPbouiCOM.DataTable b1DataTable = (SAPbouiCOM.DataTable)UIAPIRawForm.DataSources.DataTables.Item("DT_0");
+
+                        b1DataTable.ExecuteQuery($" Select * from \"ESY_VW_GRPO_LINES\" ");
+
+
+
+                        ((SAPbouiCOM.EditTextColumn)Grid0.Columns.Item("Alias")).LinkedObjectType = "4";
+                        ((SAPbouiCOM.EditTextColumn)Grid0.Columns.Item("CostPrice")).ColumnSetting.SumType = SAPbouiCOM.BoColumnSumType.bst_Auto;
+                        ((SAPbouiCOM.EditTextColumn)Grid0.Columns.Item("DiamondWt")).ColumnSetting.SumType = SAPbouiCOM.BoColumnSumType.bst_Auto;
+                        ((SAPbouiCOM.EditTextColumn)Grid0.Columns.Item("DiamondWeightSub1")).ColumnSetting.SumType = SAPbouiCOM.BoColumnSumType.bst_Auto;
+                        ((SAPbouiCOM.EditTextColumn)Grid0.Columns.Item("DiamondWeightSub2")).ColumnSetting.SumType = SAPbouiCOM.BoColumnSumType.bst_Auto;
+                        ((SAPbouiCOM.EditTextColumn)Grid0.Columns.Item("GoldWeight")).ColumnSetting.SumType = SAPbouiCOM.BoColumnSumType.bst_Auto;
+
+
+                        SAPbobsCOM.Recordset result = B1Provider.oRecordset("Select SUM(\"CostPrice\") from \"ESY_VW_GRPO_LINES\"");
+
+                        EditText6.Value = result.Fields.Item(0).Value.ToString();
+                        EditText7.Value = "0";
+                        EditText8.Value = "0";
+                        EditText9.Value = "0";
+                        EditText10.Value = result.Fields.Item(0).Value.ToString();
+
+
+                        System.Runtime.InteropServices.Marshal.ReleaseComObject(result);
+                        GC.Collect(); // Release the handle to the User Fields
+
                     }
-
-                    SAPbouiCOM.DataTable b1DataTable = (SAPbouiCOM.DataTable)UIAPIRawForm.DataSources.DataTables.Item("DT_0");
-
-                    b1DataTable.ExecuteQuery($" Select * from \"ESY_VW_GRPO_LINES\" ");
-
-
-
-                    ((SAPbouiCOM.EditTextColumn)Grid0.Columns.Item("Alias")).LinkedObjectType = "4";
-                    ((SAPbouiCOM.EditTextColumn)Grid0.Columns.Item("CostPrice")).ColumnSetting.SumType = SAPbouiCOM.BoColumnSumType.bst_Auto;
-                    ((SAPbouiCOM.EditTextColumn)Grid0.Columns.Item("DiamondWt")).ColumnSetting.SumType = SAPbouiCOM.BoColumnSumType.bst_Auto;
-                    ((SAPbouiCOM.EditTextColumn)Grid0.Columns.Item("DiamondWeightSub1")).ColumnSetting.SumType = SAPbouiCOM.BoColumnSumType.bst_Auto;
-                    ((SAPbouiCOM.EditTextColumn)Grid0.Columns.Item("DiamondWeightSub2")).ColumnSetting.SumType = SAPbouiCOM.BoColumnSumType.bst_Auto;
-                    ((SAPbouiCOM.EditTextColumn)Grid0.Columns.Item("GoldWeight")).ColumnSetting.SumType = SAPbouiCOM.BoColumnSumType.bst_Auto;
-
-
-                    SAPbobsCOM.Recordset result = B1Provider.oRecordset("Select SUM(\"CostPrice\") from \"ESY_VW_GRPO_LINES\"");
-
-                    EditText6.Value = result.Fields.Item(0).Value.ToString();
-                    EditText7.Value = "0";
-                    EditText8.Value = "0";
-                    EditText9.Value = "0";
-                    EditText10.Value = result.Fields.Item(0).Value.ToString();
-
-
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(result);
-                    GC.Collect(); // Release the handle to the User Fields
-
-
                 }
                 catch (Exception ex)
                 {
                     Application.SBO_Application.SetStatusBarMessage(ex.Message);
                 }
+
+
+
 
                 UIAPIRawForm.Freeze(false);
 
@@ -528,16 +535,16 @@ namespace Diamond_Addon.Forms
             SAPbouiCOM.ProgressBar oBar = null;
             try
             {
-                string whseCode = B1Provider.GetReceivingWarehouseCode(ComboBox0.Value);
+                string whseCode = EditText12.Value;
                 if (string.IsNullOrEmpty(whseCode))
                 {
-                    Application.SBO_Application.SetStatusBarMessage("check warehouse setup, the (Stock Type) field is not assigned");
+                    Application.SBO_Application.SetStatusBarMessage("Select a warehouse");
                     return;
                 }
 
                 if (string.IsNullOrEmpty(ComboBox2.Value))
                 {
-                    Application.SBO_Application.SetStatusBarMessage("Select a Tax Code");
+                    Application.SBO_Application.SetStatusBarMessage("Select a tax code");
                     return;
                 }
 
@@ -587,7 +594,8 @@ namespace Diamond_Addon.Forms
                     oDocument.Lines.WarehouseCode = whseCode;
 
                     oDocument.Lines.UnitPrice = (double)records.Fields.Item("CostPrice").Value;
-                    oDocument.Lines.TaxCode = ComboBox2.Selected.Value;
+                   
+                    oDocument.Lines.VatGroup= ComboBox2.Selected.Value;
 
 
                     string serialNumber = GenerateNextSerialNumber(oDocument.Lines.ItemCode, records.Fields.Item("TaggingDefinition").Value.ToString());
@@ -784,7 +792,7 @@ namespace Diamond_Addon.Forms
 
 
 
-            nextSN = taggingDefinition + next.ToString().PadLeft(8, '0');
+            nextSN = taggingDefinition + next.ToString().PadLeft(5, '0');
 
             return nextSN;
 
@@ -792,5 +800,62 @@ namespace Diamond_Addon.Forms
 
         private SAPbouiCOM.StaticText StaticText14;
         private SAPbouiCOM.ComboBox ComboBox2;
+        private SAPbouiCOM.EditText EditText12;
+
+        private void EditText12_ChooseFromListBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
+        {
+            BubbleEvent = true;
+            try
+            {
+                if (!string.IsNullOrEmpty(ComboBox0.Value))
+                {
+                    #region add conditions to CFL
+
+                    SAPbouiCOM.ChooseFromListCollection oCFLs = UIAPIRawForm.ChooseFromLists; ;
+                    SAPbouiCOM.Conditions oCons = null;
+                    SAPbouiCOM.Condition oCon = null;
+                    SAPbouiCOM.ChooseFromList oCFL = oCFLs.Item("OWHS");
+                    oCons = oCFL.GetConditions();
+                    if (oCons.Count == 0)
+                    {
+                        oCon = oCons.Add();
+                        oCon.Alias = "U_ESY_StockType";
+                        oCon.Operation = SAPbouiCOM.BoConditionOperation.co_EQUAL;
+                        oCon.CondVal = ComboBox0.Value;
+                        oCFL.SetConditions(oCons);
+                    }
+
+                    #endregion
+                }
+                else
+                {
+                    Application.SBO_Application.SetStatusBarMessage("Stock type must be selected", SAPbouiCOM.BoMessageTime.bmt_Medium, true);
+                    BubbleEvent = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Application.SBO_Application.SetStatusBarMessage(ex.Message, SAPbouiCOM.BoMessageTime.bmt_Medium, true);
+            }
+
+        }
+
+        private void EditText12_ChooseFromListAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
+        {
+
+            try
+            {
+                SAPbouiCOM.ISBOChooseFromListEventArg cfle = (SAPbouiCOM.ISBOChooseFromListEventArg)pVal;
+                string uid = cfle.ChooseFromListUID;
+                SAPbouiCOM.DataTable dt = cfle.SelectedObjects;
+
+                try { EditText12.Value = dt.GetValue("WhsCode", 0).ToString(); } catch { }
+                
+            }
+            catch (Exception ex)
+            {
+                Application.SBO_Application.SetStatusBarMessage(ex.Message);
+            }
+        }
     }
 }

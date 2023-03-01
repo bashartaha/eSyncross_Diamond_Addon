@@ -30,19 +30,7 @@ namespace Diamond_Addon.Providers
             return oRecordset;
         }
 
-        internal static string GetReceivingWarehouseCode(string value)
-        {
-            SAPbobsCOM.Recordset result = oRecordset($"Select \"WhsCode\" from \"OWHS\" where \"U_ESY_StockType\" = '{value}'");
-
-            if (result.RecordCount > 0)
-            {
-                return result.Fields.Item(0).Value.ToString();
-            }
-            else
-            {
-                return null;
-            }
-        }
+        
 
         internal static int GetNextSerialNumber(string itemCode)
         {
@@ -56,6 +44,15 @@ namespace Diamond_Addon.Providers
             {
                 return 0;
             }
+        }
+
+        internal static string getServerPassword()
+        {
+            SAPbobsCOM.Recordset result = oRecordset("Select * From ESY_GetServerPassword");
+
+            
+                return  result.Fields.Item(0).Value.ToString();
+            
         }
 
 
@@ -424,6 +421,8 @@ namespace Diamond_Addon.Providers
 
 
         }
+
+        
 
         public static void InitialValues(ParentTable parentTable)
         {

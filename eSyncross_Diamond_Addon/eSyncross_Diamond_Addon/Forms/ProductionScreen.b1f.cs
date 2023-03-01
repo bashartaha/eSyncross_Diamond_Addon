@@ -342,6 +342,32 @@ namespace EvoAddon.Forms
 
                 }
 
+
+                {
+                    SAPbouiCOM.ChooseFromListCollection oCFLs = UIAPIRawForm.ChooseFromLists; ;
+                    SAPbouiCOM.Conditions oCons = null;
+                    SAPbouiCOM.Condition oCon = null;
+                    SAPbouiCOM.ChooseFromList oCFL = oCFLs.Item("OITM_1");
+                    oCons = oCFL.GetConditions();
+                    if (oCons.Count == 0)
+                    {
+                        oCon = oCons.Add();
+                        oCon.Alias = "ManBtchNum";
+                        oCon.Operation = SAPbouiCOM.BoConditionOperation.co_EQUAL;
+                        oCon.CondVal = "N";
+                        oCFL.SetConditions(oCons);
+
+                        oCon.Relationship = SAPbouiCOM.BoConditionRelationship.cr_AND;
+
+                         oCon = oCons.Add();
+                        oCon.Alias = "ManSerNum";
+                        oCon.Operation = SAPbouiCOM.BoConditionOperation.co_EQUAL;
+                        oCon.CondVal = "N";
+                        oCFL.SetConditions(oCons);
+                    }
+
+                }
+
                 #endregion
 
 
@@ -681,8 +707,8 @@ namespace EvoAddon.Forms
                     oDocument.Lines.UnitPrice = double.Parse(((SAPbouiCOM.EditText)Matrix1.Columns.Item("Cost").Cells.Item(i).Specific).Value);
 
 
-
-                    if (!string.IsNullOrEmpty(((SAPbouiCOM.EditText)Matrix1.Columns.Item("Serial").Cells.Item(i).Specific).Value))
+                   
+                    if (!string.IsNullOrEmpty(B1Provider.GetNextSerialNumber(((SAPbouiCOM.EditText)Matrix1.Columns.Item("ItemCode").Cells.Item(i).Specific).Value).ToString()))
                     {
                         oDocument.Lines.SerialNumbers.InternalSerialNumber = ((SAPbouiCOM.EditText)Matrix1.Columns.Item("Serial").Cells.Item(i).Specific).Value;
                         oDocument.Lines.SerialNumbers.Quantity = 1;

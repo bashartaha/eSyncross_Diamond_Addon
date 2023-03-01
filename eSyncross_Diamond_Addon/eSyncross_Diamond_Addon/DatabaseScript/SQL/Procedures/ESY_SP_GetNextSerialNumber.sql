@@ -3,13 +3,26 @@ Create or alter proc ESY_SP_GetNextSerialNumber
 as
 begin
 
-declare @serialnumber nvarchar(100);
-Select @serialnumber= max (DistNumber) from OSRN Where itemcode = @itemCode
+if exists(Select top 1 itemcode from OSRN Where itemcode = @itemCode)
+begin
+declare @currentSerialnumber nvarchar(100);
+Select @currentSerialnumber= max (DistNumber) from OSRN Where itemcode = @itemCode
 
+set @currentSerialnumber =SUBSTRING(@currentSerialnumber,3,LEN(@currentSerialnumber)-2);
+ 
+Select  cast ( @currentSerialnumber as int) ;
 
-select SUBSTRING(@serialnumber,3,LEN(@serialnumber)-2) ;
+ 
+	 
+end
+else
+begin
+
+select  0
+
 end
 
 
 
+end
  

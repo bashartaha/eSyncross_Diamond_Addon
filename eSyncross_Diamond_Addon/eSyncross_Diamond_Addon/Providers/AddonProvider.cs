@@ -98,6 +98,7 @@ namespace Diamond_Addon.Providers
 
             B1Provider.CreateUDF("OPDN", "ESY_StockType", "Stock Type", BoFieldTypes.db_Alpha, BoFldSubTypes.st_None, 20, ConsignmentArray, "1", null);
             B1Provider.CreateUDF("OWHS", "ESY_StockType", "Stock Type", BoFieldTypes.db_Alpha, BoFldSubTypes.st_None, 20, ConsignmentArray, "1", null);
+            B1Provider.CreateUDF("OADM", "ESY_ServerPwd", "PWD", BoFieldTypes.db_Alpha, BoFldSubTypes.st_None, 20, ConsignmentArray, "1", null);
 
 
             #region ESY_OWOR

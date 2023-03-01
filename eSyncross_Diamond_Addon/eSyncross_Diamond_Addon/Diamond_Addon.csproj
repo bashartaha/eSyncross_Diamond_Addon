@@ -8,8 +8,8 @@
     <ProjectGuid>{8A092648-EFD0-4356-9A57-9AE3810793E2}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EvoAddon</RootNamespace>
-    <AssemblyName>EvoAddon</AssemblyName>
+    <RootNamespace>DiamondAddon</RootNamespace>
+    <AssemblyName>DiamondAddon</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -217,6 +217,7 @@
     <Content Include="DatabaseScript\SQL\Procedures\ESY_SP_GetSerialTransactions.sql" />
     <Content Include="DatabaseScript\SQL\Procedures\ESY_SP_GetNextSerialNumber.sql" />
     <Content Include="DatabaseScript\SQL\Tables\ESY_GRPO.sql" />
+    <Content Include="DatabaseScript\SQL\Views\ESY_GetServerPassword.sql" />
     <Content Include="DatabaseScript\SQL\Views\ESY_VW_GRPO_LINES.sql" />
   </ItemGroup>
   <ItemGroup>
