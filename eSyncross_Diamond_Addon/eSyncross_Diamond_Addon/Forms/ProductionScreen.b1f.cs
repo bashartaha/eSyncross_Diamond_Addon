@@ -69,7 +69,8 @@ namespace EvoAddon.Forms
         /// </summary>
         public override void OnInitializeFormEvents()
         {
-            this.ResizeAfter += new ResizeAfterHandler(this.Form_ResizeAfter);
+            this.ResizeAfter += new SAPbouiCOM.Framework.FormBase.ResizeAfterHandler(this.Form_ResizeAfter);
+            this.DataLoadAfter += new DataLoadAfterHandler(this.Form_DataLoadAfter);
 
         }
 
@@ -399,6 +400,7 @@ namespace EvoAddon.Forms
                     try { Matrix1.SetCellWithoutValidation(pVal.Row, "Qty", "1"); } catch { }
                     try { Matrix1.SetCellWithoutValidation(pVal.Row, "Cost", dt.GetValue("AvgPrice", 0).ToString()); } catch { }
                     try { Matrix1.SetCellWithoutValidation(pVal.Row, "ItemCode", dt.GetValue("ItemCode", 0).ToString()); } catch { }
+                    try { Matrix1.SetCellWithoutValidation(pVal.Row, "TD", dt.GetValue("U_SRK_SubCategory", 0).ToString()); } catch { }
                     try { Matrix1.SetCellWithoutValidation(pVal.Row, "ItemName", dt.GetValue("ItemName", 0).ToString()); } catch { }
                 }
 
@@ -410,6 +412,7 @@ namespace EvoAddon.Forms
                     try { Matrix1.SetCellWithoutValidation(pVal.Row, "Serial", ""); } catch { }
                     try { Matrix1.SetCellWithoutValidation(pVal.Row, "Cost", dt.GetValue("AvgPrice", 0).ToString()); } catch { }
                     try { Matrix1.SetCellWithoutValidation(pVal.Row, "ItemName", dt.GetValue("ItemName", 0).ToString()); } catch { }
+                    try { Matrix1.SetCellWithoutValidation(pVal.Row, "TD", dt.GetValue("U_SRK_SubCategory", 0).ToString()); } catch { }
                     try { Matrix1.SetCellWithoutValidation(pVal.Row, "ItemCode", dt.GetValue("ItemCode", 0).ToString()); } catch { }
                 }
 
@@ -457,6 +460,12 @@ namespace EvoAddon.Forms
                             ((SAPbouiCOM.EditText)Matrix0.Columns.Item("#").Cells.Item(Matrix0.RowCount).Specific).Value = j.ToString();
                         }
 
+                        if(UIAPIRawForm.Mode == SAPbouiCOM.BoFormMode.fm_OK_MODE)
+                        {
+                            UIAPIRawForm.Mode = SAPbouiCOM.BoFormMode.fm_UPDATE_MODE;
+                        }
+
+                        break;
                     }
                 }
             }
@@ -482,6 +491,12 @@ namespace EvoAddon.Forms
                             ((SAPbouiCOM.EditText)Matrix1.Columns.Item("#").Cells.Item(Matrix1.RowCount).Specific).Value = j.ToString();
                         }
 
+                        if (UIAPIRawForm.Mode == SAPbouiCOM.BoFormMode.fm_OK_MODE)
+                        {
+                            UIAPIRawForm.Mode = SAPbouiCOM.BoFormMode.fm_UPDATE_MODE;
+                        }
+
+                        break;
                     }
                 }
             }
@@ -707,11 +722,14 @@ namespace EvoAddon.Forms
                     oDocument.Lines.UnitPrice = double.Parse(((SAPbouiCOM.EditText)Matrix1.Columns.Item("Cost").Cells.Item(i).Specific).Value);
 
 
-                   
-                    if (!string.IsNullOrEmpty(B1Provider.GetNextSerialNumber(((SAPbouiCOM.EditText)Matrix1.Columns.Item("ItemCode").Cells.Item(i).Specific).Value).ToString()))
+                   string serialNumber = GenerateNextSerialNumber(((SAPbouiCOM.EditText)Matrix1.Columns.Item("ItemCode").Cells.Item(i).Specific).Value.ToString(),
+                       ((SAPbouiCOM.EditText)Matrix1.Columns.Item("TD").Cells.Item(i).Specific).Value.ToString());
+
+                    if (!string.IsNullOrEmpty(serialNumber))
                     {
-                        oDocument.Lines.SerialNumbers.InternalSerialNumber = ((SAPbouiCOM.EditText)Matrix1.Columns.Item("Serial").Cells.Item(i).Specific).Value;
+                        oDocument.Lines.SerialNumbers.InternalSerialNumber = serialNumber;
                         oDocument.Lines.SerialNumbers.Quantity = 1;
+                        oDocument.Lines.SerialNumbers.UserFields.Fields.Item("U_CostPrice").Value = double.Parse(((SAPbouiCOM.EditText)Matrix1.Columns.Item("Cost").Cells.Item(i).Specific).Value);
                         oDocument.Lines.SerialNumbers.Add();
                     }
 
@@ -739,5 +757,93 @@ namespace EvoAddon.Forms
         private SAPbouiCOM.EditText EditText3;
         private SAPbouiCOM.StaticText StaticText7;
         private SAPbouiCOM.EditText EditText5;
+
+
+        Dictionary<string, int> NextSerialNumbers = new Dictionary<string, int>();
+
+        private string GenerateNextSerialNumber(string itemCode, string taggingDefinition)
+        {
+            string nextSN = "";
+            int current = 1;
+            int next = 1;
+            if (NextSerialNumbers.Where(w => w.Key == itemCode).Count() == 0)
+            {
+                current = B1Provider.GetNextSerialNumber(itemCode);
+
+                next = current + 1;
+
+                NextSerialNumbers.Add(itemCode, next);
+
+
+            }
+            else
+            {
+                current = NextSerialNumbers.Where(w => w.Key == itemCode).First().Value;
+
+                next = current + 1;
+
+                NextSerialNumbers[itemCode] = next;
+
+            }
+
+
+
+            nextSN = taggingDefinition + next.ToString().PadLeft(5, '0');
+
+            return nextSN;
+
+        }
+
+        private void Form_DataLoadAfter(ref SAPbouiCOM.BusinessObjectInfo pVal)
+        {
+
+            UIAPIRawForm.Freeze(true);
+            try
+            {
+
+                if (!string.IsNullOrEmpty(EditText6.Value))
+                {
+                    Matrix0.Item.Enabled = false;
+                    Button6.Item.Visible = false;
+                }
+                else
+                {
+                    Matrix0.Item.Enabled = true;
+                    Button6.Item.Visible = true;
+                }
+
+
+                if (!string.IsNullOrEmpty(EditText7.Value))
+                {
+                    Matrix1.Item.Enabled = false;
+                    Button4.Item.Visible = false;
+                    EditText1.Item.Enabled = false;
+                    EditText2.Item.Enabled = false;
+                }
+                else
+                {
+                    Matrix1.Item.Enabled = true;
+                    Button4.Item.Visible = true;
+                    EditText1.Item.Enabled = true;
+                    EditText2.Item.Enabled = true;
+                }
+
+
+
+                if (!string.IsNullOrEmpty(EditText6.Value) && !string.IsNullOrEmpty(EditText7.Value))
+                {
+                   Button2.Item.Visible = false;
+                }
+                else
+                {
+                    Button2.Item.Visible = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Application.SBO_Application.SetStatusBarMessage(ex.Message);
+            }
+            UIAPIRawForm.Freeze(false);
+        }
     }
 }

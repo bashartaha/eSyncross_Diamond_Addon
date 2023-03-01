@@ -151,9 +151,9 @@ namespace Diamond_Addon.Providers
             ESY_WOR2.FieldsList.Add(new UserDefinedField("@ESY_WOR2", "ItemCost ", "ItemCost", SAPbobsCOM.BoFieldTypes.db_Float, SAPbobsCOM.BoFldSubTypes.st_Price, 0, null, null, null));
             ESY_WOR2.FieldsList.Add(new UserDefinedField("@ESY_WOR2", "Quantity ", "Quantity", SAPbobsCOM.BoFieldTypes.db_Float, SAPbobsCOM.BoFldSubTypes.st_Quantity, 0, null, null, null));
             ESY_WOR2.FieldsList.Add(new UserDefinedField("@ESY_WOR2", "WhseCode ", "WhseCode", SAPbobsCOM.BoFieldTypes.db_Alpha, SAPbobsCOM.BoFldSubTypes.st_None, 10, null, null, null));
+            ESY_WOR2.FieldsList.Add(new UserDefinedField("@ESY_WOR2", "TagDefinition ", "TagDefinition", SAPbobsCOM.BoFieldTypes.db_Alpha, SAPbobsCOM.BoFldSubTypes.st_None, 10, null, null, null));
 
-
-
+            
             B1Provider.Build_UDTs_And_UDFs(ESY_WOR2);
 
             #endregion
