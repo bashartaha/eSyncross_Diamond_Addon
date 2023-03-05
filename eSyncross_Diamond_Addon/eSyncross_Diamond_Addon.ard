@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<AddOnRegData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SlientInstallation="No" SlientUpgrade="No" Partnernmsp="eSyncross Diamond Addon" SchemaVersion="3.0" Type="" MultipleVersion="false" OnDemand="" OnPremise="" ExtName="eSyncross Diamond Addon" ExtVersion="1.0.4" Contdata="" Partner="eSyncross" DBType="Both" ClientType="A">
+<AddOnRegData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" SlientInstallation="No" SlientUpgrade="No" Partnernmsp="eSyncross Diamond Addon" SchemaVersion="3.0" Type="" MultipleVersion="false" OnDemand="" OnPremise="" ExtName="eSyncross Diamond Addon" ExtVersion="1.0.5" Contdata="" Partner="eSyncross" DBType="Both" ClientType="A">
   <Validity>
     <SBOCompatibility>
       <Version From="" To="" />
@@ -158,6 +158,9 @@
             <File FileName="System.Threading.Tasks.Extensions.xml">
               <Actions />
             </File>
+            <File FileName="Resources\CrystalReports\Picklist.rpt">
+              <Actions />
+            </File>
           </Files>
         </Installation>
         <Uninstallation>
@@ -289,6 +292,9 @@
               <Actions />
             </File>
             <File FileName="System.Threading.Tasks.Extensions.xml">
+              <Actions />
+            </File>
+            <File FileName="Resources\CrystalReports\Picklist.rpt">
               <Actions />
             </File>
           </Files>

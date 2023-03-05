@@ -548,6 +548,21 @@ namespace Diamond_Addon.Forms
                     return;
                 }
 
+                if (string.IsNullOrEmpty(EditText3.Value))
+                {
+                    Application.SBO_Application.SetStatusBarMessage("Supplier reference number is missing");
+                    return;
+                }
+                else
+                {
+                    SAPbobsCOM.Recordset rs = B1Provider.oRecordset($"Select DocNum from OPDN where NumAtCard = '{EditText3.Value}'");
+                    if (rs.RecordCount > 0)
+                    {
+                        Application.SBO_Application.SetStatusBarMessage($"Supplier reference: {EditText3.Value} is already processed, check Goods Receipt PO number : {rs.Fields.Item(0).Value.ToString()}");
+                        return;
+                    }
+                }
+
 
                 oBar = (SAPbouiCOM.ProgressBar)Application.SBO_Application.StatusBar.CreateProgressBar("Please wait", 100, false);
                 try
@@ -586,7 +601,7 @@ namespace Diamond_Addon.Forms
 
                 while (!records.EoF)
                 {
-                    oDocument.Lines.ItemCode = GenerateItemCode(records.Fields.Item("Alias").Value.ToString());
+                    oDocument.Lines.ItemCode = GenerateItemCode(records);
 
 
 
@@ -730,7 +745,7 @@ namespace Diamond_Addon.Forms
                 }
                 else
                 {
-                    Application.SBO_Application.SetStatusBarMessage("Document has been successfully posted", SAPbouiCOM.BoMessageTime.bmt_Medium, false);
+                    Application.SBO_Application.StatusBar.SetSystemMessage("Document has been successfully posted", SAPbouiCOM.BoMessageTime.bmt_Medium,SAPbouiCOM.BoStatusBarMessageType.smt_Success);
                     Button1.Item.Visible = false;
                 }
                 #endregion
@@ -749,18 +764,50 @@ namespace Diamond_Addon.Forms
             GC.Collect(); // Release the handle to the User Fields
         }
 
-        private string GenerateItemCode(string value)
+        private string GenerateItemCode(SAPbobsCOM.Recordset records)
         {
             string itemCode = "";
-            try
-            {
-                itemCode = value;
 
-            }
-            catch (Exception ex)
+            SAPbobsCOM.Items oItem = (SAPbobsCOM.Items)B1Provider.oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oItems);
+
+            if (oItem.GetByKey(records.Fields.Item("Alias").Value.ToString()))
             {
-                Application.SBO_Application.SetStatusBarMessage(ex.Message);
+                itemCode = records.Fields.Item("Alias").Value.ToString();
             }
+            else
+            {
+                oItem.ItemCode = records.Fields.Item("Alias").Value.ToString();
+                oItem.ItemName = records.Fields.Item("Description").Value.ToString();
+
+                oItem.ItemsGroupCode = 100;
+
+                oItem.ManageSerialNumbers = SAPbobsCOM.BoYesNoEnum.tYES;
+                oItem.CostAccountingMethod = SAPbobsCOM.BoInventorySystem.bis_SNB;
+
+
+                oItem.UserFields.Fields.Item("U_ESY_Category").Value = records.Fields.Item("Category").Value.ToString();
+                oItem.UserFields.Fields.Item("U_ESY_Design").Value = records.Fields.Item("Design").Value.ToString();
+                oItem.UserFields.Fields.Item("U_ESY_Style").Value = records.Fields.Item("Style").Value.ToString();
+                oItem.UserFields.Fields.Item("U_ESY_SubCategory").Value = records.Fields.Item("SubCategory").Value.ToString();
+                oItem.UserFields.Fields.Item("U_ESY_Brand").Value = records.Fields.Item("Brand").Value.ToString();
+                oItem.UserFields.Fields.Item("U_ESY_Occasion").Value = records.Fields.Item("Occasion").Value.ToString();
+
+                int retCode = oItem.Add();
+
+                if (retCode == 0)
+                {
+                    itemCode = oItem.ItemCode;
+                }
+                else
+                {
+                    throw new Exception(B1Provider.oCompany.GetLastErrorDescription());
+                }
+            }
+
+
+
+
+
 
             return itemCode;
         }
