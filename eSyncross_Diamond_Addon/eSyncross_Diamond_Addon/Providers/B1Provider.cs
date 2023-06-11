@@ -32,9 +32,9 @@ namespace Diamond_Addon.Providers
 
         
 
-        internal static int GetNextSerialNumber(string itemCode)
+        internal static int GetNextSerialNumber(string tagDeffinition)
         {
-            SAPbobsCOM.Recordset result = oRecordset($" EXEC ESY_SP_GetNextSerialNumber '{itemCode}'");
+            SAPbobsCOM.Recordset result = oRecordset($" EXEC ESY_SP_GetNextSerialNumber '{tagDeffinition}'");
 
             if (result.RecordCount > 0)
             {

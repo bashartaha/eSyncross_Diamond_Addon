@@ -164,6 +164,9 @@
     <Compile Include="Forms\ImportSerialNumbers.b1f.cs">
       <DependentUpon>ImportSerialNumbers.b1f</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Print.b1f.cs">
+      <DependentUpon>Print.b1f</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ProductionScreen.b1f.cs">
       <DependentUpon>ProductionScreen.b1f</DependentUpon>
     </Compile>
@@ -196,6 +199,9 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Forms\ImportSerialNumbers.b1f">
+      <FormCategory>UserForm</FormCategory>
+    </None>
+    <None Include="Forms\Print.b1f">
       <FormCategory>UserForm</FormCategory>
     </None>
     <None Include="Forms\ProductionScreen.b1f">

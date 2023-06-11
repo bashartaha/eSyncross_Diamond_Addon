@@ -39,6 +39,8 @@ namespace Diamond_Addon.Forms
                 }
                 #endregion
 
+                EditText12.Value = "SR";
+
             }
             catch (Exception ex)
             {
@@ -165,6 +167,8 @@ namespace Diamond_Addon.Forms
 
                 try { EditText2.Value = dt.GetValue("CardName", 0).ToString(); } catch { }
                 try { EditText1.Value = dt.GetValue("CardCode", 0).ToString(); } catch { }
+
+                try { ComboBox2.Select(dt.GetValue("CardCode", 0).ToString(),SAPbouiCOM.BoSearchKey.psk_ByValue); } catch { }
 
             }
             catch (Exception ex)
@@ -548,6 +552,12 @@ namespace Diamond_Addon.Forms
                     return;
                 }
 
+                if (string.IsNullOrEmpty(ComboBox0.Value))
+                {
+                    Application.SBO_Application.SetStatusBarMessage("Select Stock Type");
+                    return;
+                }
+
                 if (string.IsNullOrEmpty(EditText3.Value))
                 {
                     Application.SBO_Application.SetStatusBarMessage("Supplier reference number is missing");
@@ -582,7 +592,16 @@ namespace Diamond_Addon.Forms
 
                 SAPbobsCOM.Recordset records = B1Provider.oRecordset("Select * from \"ESY_GRPO\"");
 
-                SAPbobsCOM.Documents oDocument = (SAPbobsCOM.Documents)B1Provider.oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oPurchaseDeliveryNotes);
+                SAPbobsCOM.Documents oDocument =(SAPbobsCOM.Documents)B1Provider.oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oPurchaseDeliveryNotes);
+
+                //if (ComboBox0.Value == "1")
+                //{
+                //    oDocument = (SAPbobsCOM.Documents)B1Provider.oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oPurchaseInvoices);
+                //}
+                //else
+                //{
+                 //   oDocument = (SAPbobsCOM.Documents)B1Provider.oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oPurchaseDeliveryNotes);
+                //}
 
                 #region Header
                 oDocument.CardCode = EditText1.Value;
@@ -591,7 +610,14 @@ namespace Diamond_Addon.Forms
                 oDocument.UserFields.Fields.Item("U_ESY_StockType").Value = ComboBox0.Value;
                 oDocument.Comments = EditText11.Value;
                 oDocument.DocCurrency = "AED";
+                //oDocument.Rounding = SAPbobsCOM.BoYesNoEnum.tYES;
+                //oDocument.RoundingDiffAmount = EditText8.Value;
 
+                if (double.Parse(EditText9.Value) > 0)
+                {
+                    oDocument.Expenses.ExpenseCode = 1;
+                    oDocument.Expenses.LineTotal = double.Parse(EditText9.Value);
+                }
 
                 #endregion
 
@@ -612,8 +638,12 @@ namespace Diamond_Addon.Forms
                    
                     oDocument.Lines.VatGroup= ComboBox2.Selected.Value;
 
+                  
 
                     string serialNumber = GenerateNextSerialNumber(oDocument.Lines.ItemCode, records.Fields.Item("TaggingDefinition").Value.ToString());
+
+                    oDocument.Lines.SerialNum = serialNumber;
+                    oDocument.Lines.UserFields.Fields.Item("U_ESY_Status").Value = "Availble";
                     oDocument.Lines.SerialNumbers.InternalSerialNumber = serialNumber;
                     oDocument.Lines.SerialNumbers.ManufacturerSerialNumber = serialNumber;
                     oDocument.Lines.SerialNumbers.Quantity = 1;
@@ -631,7 +661,24 @@ namespace Diamond_Addon.Forms
                     oDocument.Lines.SerialNumbers.UserFields.Fields.Item("U_CostPrice").Value = records.Fields.Item("CostPrice").Value;
                     oDocument.Lines.SerialNumbers.UserFields.Fields.Item("U_AddCharges").Value = records.Fields.Item("AddCharges").Value;
                     oDocument.Lines.SerialNumbers.UserFields.Fields.Item("U_MarkUpPercent").Value = records.Fields.Item("MarkUpPercent").Value;
-                    oDocument.Lines.SerialNumbers.UserFields.Fields.Item("U_TagPrice").Value = records.Fields.Item("TagPrice").Value;
+
+                    //  oDocument.Lines.SerialNumbers.UserFields.Fields.Item("U_TagPrice").Value = records.Fields.Item("TagPrice").Value;
+
+                    if (records.Fields.Item("TagPrice").Value != null && !string.IsNullOrEmpty(records.Fields.Item("TagPrice").Value.ToString()) && double.Parse(records.Fields.Item("TagPrice").Value.ToString()) > 0)
+                    {
+                        oDocument.Lines.SerialNumbers.UserFields.Fields.Item("U_TagPrice").Value = records.Fields.Item("TagPrice").Value;
+                    }
+                    else
+                    {
+                        if (records.Fields.Item("MarkUpPercent").Value != null && !string.IsNullOrEmpty(records.Fields.Item("MarkUpPercent").Value.ToString()) && double.Parse(records.Fields.Item("MarkUpPercent").Value.ToString()) > 0)
+                        {
+                            oDocument.Lines.SerialNumbers.UserFields.Fields.Item("U_TagPrice").Value = (
+                                double.Parse(records.Fields.Item("CostPrice").Value.ToString())  * (double.Parse(records.Fields.Item("MarkUpPercent").Value.ToString())/100.00)
+                                ) + double.Parse(records.Fields.Item("CostPrice").Value.ToString()) ;
+                        }
+                      
+                    }
+
                     oDocument.Lines.SerialNumbers.UserFields.Fields.Item("U_MaxDiscountPer").Value = records.Fields.Item("MaxDiscountPer").Value;
                     oDocument.Lines.SerialNumbers.UserFields.Fields.Item("U_PearlWeight").Value = records.Fields.Item("PearlWeight").Value;
                     oDocument.Lines.SerialNumbers.UserFields.Fields.Item("U_SupplierRefNo").Value = records.Fields.Item("SupplierRefNo").Value;
@@ -708,7 +755,7 @@ namespace Diamond_Addon.Forms
 
                 oAtt.Lines.SourcePath = Path.GetDirectoryName(path);
                 oAtt.Lines.FileName = Path.GetFileNameWithoutExtension(path);
-                oAtt.Lines.FileExtension = Path.GetExtension(path).Replace(".", "");
+                oAtt.Lines.FileExtension = Path.GetExtension(path).Replace(".", "");               
                 oAtt.Lines.Add();
 
 
@@ -779,7 +826,7 @@ namespace Diamond_Addon.Forms
                 oItem.ItemCode = records.Fields.Item("Alias").Value.ToString();
                 oItem.ItemName = records.Fields.Item("Description").Value.ToString();
 
-                oItem.ItemsGroupCode = 100;
+                oItem.ItemsGroupCode = 101;
 
                 oItem.ManageSerialNumbers = SAPbobsCOM.BoYesNoEnum.tYES;
                 oItem.CostAccountingMethod = SAPbobsCOM.BoInventorySystem.bis_SNB;
@@ -819,7 +866,7 @@ namespace Diamond_Addon.Forms
             int next = 1;
             if (NextSerialNumbers.Where(w => w.Key == itemCode).Count() == 0)
             {
-                current = B1Provider.GetNextSerialNumber(itemCode);
+                current = B1Provider.GetNextSerialNumber(taggingDefinition);
 
                  next = current + 1;
 

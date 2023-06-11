@@ -94,7 +94,7 @@ namespace Diamond_Addon.Providers
 
             #endregion
 
-
+            
 
             B1Provider.CreateUDF("OPDN", "ESY_StockType", "Stock Type", BoFieldTypes.db_Alpha, BoFldSubTypes.st_None, 20, ConsignmentArray, "1", null);
             B1Provider.CreateUDF("OWHS", "ESY_StockType", "Stock Type", BoFieldTypes.db_Alpha, BoFldSubTypes.st_None, 20, ConsignmentArray, "1", null);
@@ -106,7 +106,9 @@ namespace Diamond_Addon.Providers
             B1Provider.CreateUDF("OITM", "ESY_Brand", "Brand", BoFieldTypes.db_Alpha, BoFldSubTypes.st_None, 40, null, null, null);
 
             B1Provider.CreateUDF("OITM", "ESY_Style", "Style", BoFieldTypes.db_Alpha, BoFldSubTypes.st_None, 40, null, null, null);
-            B1Provider.CreateUDF("OITM", "ESY_Occasion", "Occasion", BoFieldTypes.db_Alpha, BoFldSubTypes.st_None, 40, null, null, null); 
+            B1Provider.CreateUDF("OITM", "ESY_Occasion", "Occasion", BoFieldTypes.db_Alpha, BoFldSubTypes.st_None, 40, null, null, null);
+
+            B1Provider.CreateUDF("RDR1", "ESY_Status", "Serial Number Status", BoFieldTypes.db_Alpha, BoFldSubTypes.st_None, 40, null, null, null);
 
 
 
