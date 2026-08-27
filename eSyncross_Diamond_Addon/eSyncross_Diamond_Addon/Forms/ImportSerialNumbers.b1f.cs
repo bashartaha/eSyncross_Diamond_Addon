@@ -102,6 +102,8 @@ namespace Diamond_Addon.Forms
             this.EditText12 = ((SAPbouiCOM.EditText)(this.GetItem("Item_28").Specific));
             this.EditText12.ChooseFromListAfter += new SAPbouiCOM._IEditTextEvents_ChooseFromListAfterEventHandler(this.EditText12_ChooseFromListAfter);
             this.EditText12.ChooseFromListBefore += new SAPbouiCOM._IEditTextEvents_ChooseFromListBeforeEventHandler(this.EditText12_ChooseFromListBefore);
+            this.EditText13 = ((SAPbouiCOM.EditText)(this.GetItem("Item_38").Specific));
+            this.StaticText16 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_39").Specific));
             this.OnCustomInitialize();
 
         }
@@ -168,7 +170,7 @@ namespace Diamond_Addon.Forms
                 try { EditText2.Value = dt.GetValue("CardName", 0).ToString(); } catch { }
                 try { EditText1.Value = dt.GetValue("CardCode", 0).ToString(); } catch { }
 
-                try { ComboBox2.Select(dt.GetValue("CardCode", 0).ToString(),SAPbouiCOM.BoSearchKey.psk_ByValue); } catch { }
+                try { ComboBox2.Select(dt.GetValue("TaxCode", 0).ToString(),SAPbouiCOM.BoSearchKey.psk_ByValue); } catch { }
 
             }
             catch (Exception ex)
@@ -605,7 +607,7 @@ namespace Diamond_Addon.Forms
 
                 #region Header
                 oDocument.CardCode = EditText1.Value;
-                oDocument.DocDate = DateTime.Today;
+                oDocument.DocDate =DateTime.ParseExact( EditText4.Value,"yyyyMMdd", CultureInfo.CurrentCulture);
                 oDocument.NumAtCard = EditText3.Value;
                 oDocument.UserFields.Fields.Item("U_ESY_StockType").Value = ComboBox0.Value;
                 oDocument.Comments = EditText11.Value;
@@ -643,6 +645,7 @@ namespace Diamond_Addon.Forms
                     string serialNumber = GenerateNextSerialNumber(oDocument.Lines.ItemCode, records.Fields.Item("TaggingDefinition").Value.ToString());
 
                     oDocument.Lines.SerialNum = serialNumber;
+
                     oDocument.Lines.UserFields.Fields.Item("U_ESY_Status").Value = "Availble";
                     oDocument.Lines.SerialNumbers.InternalSerialNumber = serialNumber;
                     oDocument.Lines.SerialNumbers.ManufacturerSerialNumber = serialNumber;
@@ -792,7 +795,9 @@ namespace Diamond_Addon.Forms
                 }
                 else
                 {
-                    Application.SBO_Application.StatusBar.SetSystemMessage("Document has been successfully posted", SAPbouiCOM.BoMessageTime.bmt_Medium,SAPbouiCOM.BoStatusBarMessageType.smt_Success);
+                    oDocument.GetByKey(int.Parse(B1Provider.oCompany.GetNewObjectKey()));
+                    EditText13.Value = oDocument.DocNum.ToString();
+                    Application.SBO_Application.StatusBar.SetSystemMessage($"Document has been successfully posted, DocNum # {oDocument.DocNum}", SAPbouiCOM.BoMessageTime.bmt_Medium,SAPbouiCOM.BoStatusBarMessageType.smt_Success);
                     Button1.Item.Visible = false;
                 }
                 #endregion
@@ -951,5 +956,8 @@ namespace Diamond_Addon.Forms
                 Application.SBO_Application.SetStatusBarMessage(ex.Message);
             }
         }
+
+        private SAPbouiCOM.EditText EditText13;
+        private SAPbouiCOM.StaticText StaticText16;
     }
 }

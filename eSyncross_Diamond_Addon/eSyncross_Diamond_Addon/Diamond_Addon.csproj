@@ -215,6 +215,7 @@
     <None Include="Resources\CrystalReports\Picklist.rpt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\ESY_GRPO_import_template.csv" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="DatabaseScript\HANA\Procedures\EVO_SP_GetAvailableQuantityInBins.sql" />
