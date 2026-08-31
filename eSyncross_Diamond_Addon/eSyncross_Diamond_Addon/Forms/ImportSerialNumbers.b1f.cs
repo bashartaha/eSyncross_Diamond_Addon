@@ -752,22 +752,32 @@ namespace Diamond_Addon.Forms
 
                 #region Attachment
 
-                SAPbobsCOM.Attachments2 oAtt = (SAPbobsCOM.Attachments2)B1Provider.oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oAttachments2);
-
-                string path = EditText0.Value;
-
-                oAtt.Lines.SourcePath = Path.GetDirectoryName(path);
-                oAtt.Lines.FileName = Path.GetFileNameWithoutExtension(path);
-                oAtt.Lines.FileExtension = Path.GetExtension(path).Replace(".", "");               
-                oAtt.Lines.Add();
-
-
-                int oAttDocEntry = oAtt.Add();
-
-                if (oAttDocEntry == 0)
+                try
                 {
-                    oDocument.AttachmentEntry = oAttDocEntry;
+                    SAPbobsCOM.Attachments2 oAtt = (SAPbobsCOM.Attachments2)B1Provider.oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oAttachments2);
+
+                    string path = EditText0.Value;
+
+                    oAtt.Lines.SourcePath = Path.GetDirectoryName(path);
+                    oAtt.Lines.FileName = Path.GetFileNameWithoutExtension(path);
+                    oAtt.Lines.FileExtension = Path.GetExtension(path).Replace(".", "");
+                    oAtt.Lines.Add();
+
+
+                    int oAttDocEntry = oAtt.Add();
+
+                    if (oAttDocEntry == 0)
+                    {
+                        oDocument.AttachmentEntry = oAttDocEntry;
+                    }
+
                 }
+                catch(Exception ex)
+                {
+                    Application.SBO_Application.StatusBar.SetSystemMessage($"Attachment has failed due to : {ex.Message}", SAPbouiCOM.BoMessageTime.bmt_Medium, SAPbouiCOM.BoStatusBarMessageType.smt_Warning);
+                }
+
+
 
 
                 #endregion
