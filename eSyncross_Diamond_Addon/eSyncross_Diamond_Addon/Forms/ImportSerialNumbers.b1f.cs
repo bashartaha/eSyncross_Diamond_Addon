@@ -119,7 +119,14 @@ namespace Diamond_Addon.Forms
 
         private void OnCustomInitialize()
         {
-
+            foreach (SAPbouiCOM.Item item in UIAPIRawForm.Items)
+            {
+                if (item.Type == SAPbouiCOM.BoFormItemTypes.it_EDIT ||
+                    item.Type == SAPbouiCOM.BoFormItemTypes.it_STATIC)
+                {
+                    item.Height = item.Height + 4;
+                }
+            }
         }
 
         private SAPbouiCOM.EditText EditText0;
@@ -567,7 +574,7 @@ namespace Diamond_Addon.Forms
                 }
                 else
                 {
-                    SAPbobsCOM.Recordset rs = B1Provider.oRecordset($"Select DocNum from OPDN where NumAtCard = '{EditText3.Value}'");
+                    SAPbobsCOM.Recordset rs = B1Provider.oRecordset($"Select DocNum from OPDN   where CANCELED ='N'	and NumAtCard = '{EditText3.Value}'");
                     if (rs.RecordCount > 0)
                     {
                         Application.SBO_Application.SetStatusBarMessage($"Supplier reference: {EditText3.Value} is already processed, check Goods Receipt PO number : {rs.Fields.Item(0).Value.ToString()}");
@@ -841,7 +848,7 @@ namespace Diamond_Addon.Forms
                 oItem.ItemCode = records.Fields.Item("Alias").Value.ToString();
                 oItem.ItemName = records.Fields.Item("Description").Value.ToString();
 
-                oItem.ItemsGroupCode = 101;
+                oItem.ItemsGroupCode = 116;
 
                 oItem.ManageSerialNumbers = SAPbobsCOM.BoYesNoEnum.tYES;
                 oItem.CostAccountingMethod = SAPbobsCOM.BoInventorySystem.bis_SNB;
