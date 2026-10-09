@@ -187,6 +187,16 @@ namespace Diamond_Addon.Forms
                 EditText3.Item.SetAutoManagedAttribute(SAPbouiCOM.BoAutoManagedAttr.ama_Editable, (int)SAPbouiCOM.BoAutoFormMode.afm_Find, SAPbouiCOM.BoModeVisualBehavior.mvb_True);
                 EditText4.Item.SetAutoManagedAttribute(SAPbouiCOM.BoAutoManagedAttr.ama_Editable, (int)SAPbouiCOM.BoAutoFormMode.afm_Find, SAPbouiCOM.BoModeVisualBehavior.mvb_True);
 
+
+
+                foreach (SAPbouiCOM.Item item in UIAPIRawForm.Items)
+                {
+                    if (item.Type == SAPbouiCOM.BoFormItemTypes.it_EDIT ||
+                        item.Type == SAPbouiCOM.BoFormItemTypes.it_STATIC)
+                    {
+                        item.Height = item.Height + 4;
+                    }
+                }
             }
             catch (Exception ex)
             {

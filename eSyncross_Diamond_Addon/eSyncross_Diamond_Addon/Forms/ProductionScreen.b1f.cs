@@ -768,10 +768,9 @@ namespace EvoAddon.Forms
             int next = 1;
             if (NextSerialNumbers.Where(w => w.Key == itemCode).Count() == 0)
             {
-                current = B1Provider.GetNextSerialNumber(taggingDefinition);
+                next = B1Provider.GetNextSerialNumber(taggingDefinition);
 
-                next = current + 1;
-
+               
                 NextSerialNumbers.Add(itemCode, next);
 
 

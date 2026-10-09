@@ -548,6 +548,13 @@ namespace Diamond_Addon.Forms
             SAPbouiCOM.ProgressBar oBar = null;
             try
             {
+
+                if (Application.SBO_Application.MessageBox("You cannot change this document after you have added it. Continue?", 1, "Continue", "Cancel") != 1)
+                {
+                    return;
+                }
+
+
                 string whseCode = EditText12.Value;
                 if (string.IsNullOrEmpty(whseCode))
                 {
@@ -842,6 +849,13 @@ namespace Diamond_Addon.Forms
             if (oItem.GetByKey(records.Fields.Item("Alias").Value.ToString()))
             {
                 itemCode = records.Fields.Item("Alias").Value.ToString();
+
+                //check if the item jewellery type match the tag definition in the sheet
+
+                 if(oItem.UserFields.Fields.Item("U_ESY_JewelleryType").Value.ToString() != records.Fields.Item("TaggingDefinition").Value.ToString())
+                {
+                    throw (new Exception($"Jewellery Type ({oItem.UserFields.Fields.Item("U_ESY_JewelleryType").Value.ToString() }) for item ({oItem.ItemCode}) does not match the TaggingDefinition in the excel sheet"));
+                }
             }
             else
             {
@@ -860,6 +874,7 @@ namespace Diamond_Addon.Forms
                 oItem.UserFields.Fields.Item("U_ESY_SubCategory").Value = records.Fields.Item("SubCategory").Value.ToString();
                 oItem.UserFields.Fields.Item("U_ESY_Brand").Value = records.Fields.Item("Brand").Value.ToString();
                 oItem.UserFields.Fields.Item("U_ESY_Occasion").Value = records.Fields.Item("Occasion").Value.ToString();
+                oItem.UserFields.Fields.Item("U_ESY_JewelleryType").Value = records.Fields.Item("TaggingDefinition").Value.ToString();
 
                 int retCode = oItem.Add();
 
@@ -884,13 +899,12 @@ namespace Diamond_Addon.Forms
         private string GenerateNextSerialNumber(string itemCode, string taggingDefinition)
         {
             string nextSN = "";
-            int current = 1;
+           
             int next = 1;
             if (NextSerialNumbers.Where(w => w.Key == itemCode).Count() == 0)
             {
-                current = B1Provider.GetNextSerialNumber(taggingDefinition);
-
-                 next = current + 1;
+                next = B1Provider.GetNextSerialNumber(taggingDefinition);
+                 
 
                 NextSerialNumbers.Add(itemCode, next);
 
@@ -898,9 +912,8 @@ namespace Diamond_Addon.Forms
             }
             else
             {
-                current = NextSerialNumbers.Where(w => w.Key == itemCode).First().Value;
-
-                 next = current + 1;
+                next = NextSerialNumbers.Where(w => w.Key == itemCode).First().Value;
+                 
 
                 NextSerialNumbers[itemCode] = next;
              
