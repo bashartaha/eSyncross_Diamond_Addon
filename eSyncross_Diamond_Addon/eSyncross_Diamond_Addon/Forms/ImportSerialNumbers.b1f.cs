@@ -606,7 +606,7 @@ namespace Diamond_Addon.Forms
                  
                 #region Posting
 
-                SAPbobsCOM.Recordset records = B1Provider.oRecordset("Select * from \"ESY_GRPO\"");
+                SAPbobsCOM.Recordset records = B1Provider.oRecordset("Select * from \"ESY_GRPO\" Order by Alias ");
 
                 SAPbobsCOM.Documents oDocument =(SAPbobsCOM.Documents)B1Provider.oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oPurchaseDeliveryNotes);
 
@@ -656,7 +656,7 @@ namespace Diamond_Addon.Forms
 
                   
 
-                    string serialNumber = GenerateNextSerialNumber(oDocument.Lines.ItemCode, records.Fields.Item("TaggingDefinition").Value.ToString());
+                    string serialNumber = GenerateNextSerialNumber( records.Fields.Item("TaggingDefinition").Value.ToString());
 
                     oDocument.Lines.SerialNum = serialNumber;
 
@@ -896,34 +896,33 @@ namespace Diamond_Addon.Forms
             return itemCode;
         }
 
-        private string GenerateNextSerialNumber(string itemCode, string taggingDefinition)
+        private string GenerateNextSerialNumber(string taggingDefinition)
         {
-            string nextSN = "";
-           
-            int next = 1;
-            if (NextSerialNumbers.Where(w => w.Key == itemCode).Count() == 0)
+
+            int nextNumber = 0;
+            int latest = 0;
+            if (NextSerialNumbers.Where(w => w.Key == taggingDefinition).Count() == 0)
             {
-                next = B1Provider.GetNextSerialNumber(taggingDefinition);
-                 
-
-                NextSerialNumbers.Add(itemCode, next);
-
-                
+                latest = B1Provider.GetNextSerialNumber(taggingDefinition);
+                nextNumber = latest + 1;
+                NextSerialNumbers.Add(taggingDefinition, nextNumber);
             }
             else
             {
-                next = NextSerialNumbers.Where(w => w.Key == itemCode).First().Value;
-                 
+                latest = NextSerialNumbers.Where(w => w.Key == taggingDefinition).First().Value;
+                nextNumber = latest + 1;
 
-                NextSerialNumbers[itemCode] = next;
-             
+                NextSerialNumbers[taggingDefinition] = latest + 1;
+
             }
 
 
+          
+          
 
-            nextSN = taggingDefinition + next.ToString().PadLeft(5, '0');
+           return taggingDefinition + nextNumber.ToString().PadLeft(5, '0');
 
-            return nextSN;
+            
 
         }
 
