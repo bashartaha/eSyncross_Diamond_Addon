@@ -78,6 +78,15 @@ namespace EvoAddon.Forms
 
         private void OnCustomInitialize()
         {
+            foreach (SAPbouiCOM.Item item in UIAPIRawForm.Items)
+            {
+                if (item.Type == SAPbouiCOM.BoFormItemTypes.it_EDIT ||
+                    item.Type == SAPbouiCOM.BoFormItemTypes.it_STATIC)
+                {
+                    item.Height = item.Height + 4;
+                }
+            }
+
             EditText8.Item.SetAutoManagedAttribute(SAPbouiCOM.BoAutoManagedAttr.ama_Editable, (int)SAPbouiCOM.BoAutoFormMode.afm_Find, SAPbouiCOM.BoModeVisualBehavior.mvb_True);
             EditText2.Item.SetAutoManagedAttribute(SAPbouiCOM.BoAutoManagedAttr.ama_Editable, (int)SAPbouiCOM.BoAutoFormMode.afm_Find, SAPbouiCOM.BoModeVisualBehavior.mvb_True);
             EditText4.Item.SetAutoManagedAttribute(SAPbouiCOM.BoAutoManagedAttr.ama_Editable, (int)SAPbouiCOM.BoAutoFormMode.afm_Find, SAPbouiCOM.BoModeVisualBehavior.mvb_True);
@@ -93,6 +102,8 @@ namespace EvoAddon.Forms
                 Matrix1.AddRow();
                 ((SAPbouiCOM.EditText)Matrix1.Columns.Item("#").Cells.Item(Matrix1.RowCount).Specific).Value = Matrix1.RowCount.ToString();
             }
+
+          
         }
 
         private SAPbouiCOM.StaticText StaticText1;
@@ -400,7 +411,7 @@ namespace EvoAddon.Forms
                     try { Matrix1.SetCellWithoutValidation(pVal.Row, "Qty", "1"); } catch { }
                     try { Matrix1.SetCellWithoutValidation(pVal.Row, "Cost", dt.GetValue("AvgPrice", 0).ToString()); } catch { }
                     try { Matrix1.SetCellWithoutValidation(pVal.Row, "ItemCode", dt.GetValue("ItemCode", 0).ToString()); } catch { }
-                    try { Matrix1.SetCellWithoutValidation(pVal.Row, "TD", dt.GetValue("U_SRK_SubCategory", 0).ToString()); } catch { }
+                    try { Matrix1.SetCellWithoutValidation(pVal.Row, "TD", dt.GetValue("U_ESY_JewelleryType", 0).ToString()); } catch { }
                     try { Matrix1.SetCellWithoutValidation(pVal.Row, "ItemName", dt.GetValue("ItemName", 0).ToString()); } catch { }
                 }
 
@@ -412,7 +423,7 @@ namespace EvoAddon.Forms
                     try { Matrix1.SetCellWithoutValidation(pVal.Row, "Serial", ""); } catch { }
                     try { Matrix1.SetCellWithoutValidation(pVal.Row, "Cost", dt.GetValue("AvgPrice", 0).ToString()); } catch { }
                     try { Matrix1.SetCellWithoutValidation(pVal.Row, "ItemName", dt.GetValue("ItemName", 0).ToString()); } catch { }
-                    try { Matrix1.SetCellWithoutValidation(pVal.Row, "TD", dt.GetValue("U_SRK_SubCategory", 0).ToString()); } catch { }
+                    try { Matrix1.SetCellWithoutValidation(pVal.Row, "TD", dt.GetValue("U_ESY_JewelleryType", 0).ToString()); } catch { }
                     try { Matrix1.SetCellWithoutValidation(pVal.Row, "ItemCode", dt.GetValue("ItemCode", 0).ToString()); } catch { }
                 }
 
@@ -647,9 +658,11 @@ namespace EvoAddon.Forms
                         }
                     }
 
+
                     #endregion
 
 
+                    Button2.Item.Visible = false;
                 }
                 else
                 {
@@ -722,8 +735,7 @@ namespace EvoAddon.Forms
                     oDocument.Lines.UnitPrice = double.Parse(((SAPbouiCOM.EditText)Matrix1.Columns.Item("Cost").Cells.Item(i).Specific).Value);
 
 
-                   string serialNumber = GenerateNextSerialNumber(((SAPbouiCOM.EditText)Matrix1.Columns.Item("ItemCode").Cells.Item(i).Specific).Value.ToString(),
-                       ((SAPbouiCOM.EditText)Matrix1.Columns.Item("TD").Cells.Item(i).Specific).Value.ToString());
+                   string serialNumber = GenerateNextSerialNumber(((SAPbouiCOM.EditText)Matrix1.Columns.Item("TD").Cells.Item(i).Specific).Value.ToString());
 
                     if (!string.IsNullOrEmpty(serialNumber))
                     {
@@ -761,35 +773,31 @@ namespace EvoAddon.Forms
 
         Dictionary<string, int> NextSerialNumbers = new Dictionary<string, int>();
 
-        private string GenerateNextSerialNumber(string itemCode, string taggingDefinition)
+        private string GenerateNextSerialNumber(string taggingDefinition)
         {
-            string nextSN = "";
-            int current = 1;
-            int next = 1;
-            if (NextSerialNumbers.Where(w => w.Key == itemCode).Count() == 0)
+
+            int nextNumber = 0;
+            int latest = 0;
+            if (NextSerialNumbers.Where(w => w.Key == taggingDefinition).Count() == 0)
             {
-                next = B1Provider.GetNextSerialNumber(taggingDefinition);
-
-               
-                NextSerialNumbers.Add(itemCode, next);
-
-
+                latest = B1Provider.GetNextSerialNumber(taggingDefinition);
+                nextNumber = latest + 1;
+                NextSerialNumbers.Add(taggingDefinition, nextNumber);
             }
             else
             {
-                current = NextSerialNumbers.Where(w => w.Key == itemCode).First().Value;
+                latest = NextSerialNumbers.Where(w => w.Key == taggingDefinition).First().Value;
+                nextNumber = latest + 1;
 
-                next = current + 1;
-
-                NextSerialNumbers[itemCode] = next;
+                NextSerialNumbers[taggingDefinition] = latest + 1;
 
             }
 
 
 
-            nextSN = taggingDefinition + next.ToString().PadLeft(5, '0');
+            return taggingDefinition + nextNumber.ToString().PadLeft(5, '0');
 
-            return nextSN;
+
 
         }
 
