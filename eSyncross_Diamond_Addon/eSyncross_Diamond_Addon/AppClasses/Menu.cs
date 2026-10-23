@@ -6,6 +6,7 @@ using Diamond_Addon.Providers;
 using Diamond_Addon.Forms;
 using Diamond_Addon.Forms;
 using EvoAddon.Forms;
+using DiamondAddon.Forms;
 
 namespace Diamond_Addon
 {
@@ -22,6 +23,7 @@ namespace Diamond_Addon
 
                 B1Provider.CreateMenuItem("ESY_DIO", "ESY_DIO_PRD", "Produce", SAPbouiCOM.BoMenuType.mt_STRING, null, -1);
                 B1Provider.CreateMenuItem("ESY_DIO", "ESY_DIO_IMT", "Import From Excel", SAPbouiCOM.BoMenuType.mt_STRING, null, -1);
+                B1Provider.CreateMenuItem("ESY_DIO", "ESY_DIO_PRT", "Print", SAPbouiCOM.BoMenuType.mt_STRING, null, -1);
                 B1Provider.CreateMenuItem("ESY_DIO", "ESY_DIO_TAG", "Tag Inquiry", SAPbouiCOM.BoMenuType.mt_STRING, null, -1);
 
                 B1Provider.CreateMenuItem("ESY_DIO", "ESY_DIO_INI", "Initialize", SAPbouiCOM.BoMenuType.mt_STRING, null, -1);
@@ -91,6 +93,14 @@ namespace Diamond_Addon
                     form.Show();
                 }
 
+
+                if (pVal.BeforeAction == false & (pVal.BeforeAction == false && pVal.MenuUID == "ESY_DIO_PRT"))
+                {
+                    Print form = new Print();
+                    form.Show();
+                }
+
+                
 
             }
             catch (Exception ex)

@@ -55,6 +55,14 @@ namespace Diamond_Addon.Providers
             
         }
 
+        public static SAPbobsCOM.Recordset GetDetailsBySerialNumber(string serialNumber)
+        {
+            return oRecordset($"Select  ItemCode,itemName,DistNumber from OSRN Where DistNumber = '{serialNumber}'");
+
+              
+
+        }
+
 
         public static string getDocEntryByXML(string xml)
         {
