@@ -100,7 +100,14 @@ namespace Diamond_Addon
                     form.Show();
                 }
 
-                
+
+                if (pVal.BeforeAction == false & (pVal.BeforeAction == false && pVal.MenuUID == "ESY_DIO_UPD"))
+                {
+                    UploadStock form = new UploadStock();
+                    form.Show();
+                }
+
+
 
             }
             catch (Exception ex)

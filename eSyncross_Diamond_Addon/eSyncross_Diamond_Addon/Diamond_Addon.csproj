@@ -173,6 +173,9 @@
     <Compile Include="Forms\SerialNumberDetails.b1f.cs">
       <DependentUpon>SerialNumberDetails.b1f</DependentUpon>
     </Compile>
+    <Compile Include="Forms\UploadStock.b1f.cs">
+      <DependentUpon>UploadStock.b1f</DependentUpon>
+    </Compile>
     <Compile Include="Handlers\JsonFormats.cs" />
     <Compile Include="Models\Notification.cs" />
     <Compile Include="Models\UDs\ChildTable.cs" />
@@ -183,6 +186,7 @@
     <Compile Include="Models\UDs\UserDefinedField.cs" />
     <Compile Include="Models\UDs\UserDefinedObject.cs" />
     <Compile Include="Providers\AddonProvider.cs" />
+    <Compile Include="Providers\AWS_Provider.cs" />
     <Compile Include="Providers\B1Provider.cs" />
     <Compile Include="Providers\BrowseDialog.cs" />
     <Compile Include="Providers\FileProvider.cs" />
@@ -209,6 +213,9 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Forms\SerialNumberDetails.b1f">
+      <FormCategory>UserForm</FormCategory>
+    </None>
+    <None Include="Forms\UploadStock.b1f">
       <FormCategory>UserForm</FormCategory>
     </None>
     <None Include="packages.config" />
