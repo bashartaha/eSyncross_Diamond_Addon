@@ -43,6 +43,14 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AWSSDK.Core">
+      <HintPath>..\packages\AWSSDK.Core.3.7.500.2\lib\net45\AWSSDK.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="AWSSDK.S3">
+      <HintPath>..\packages\AWSSDK.S3.3.7.500.2\lib\net45\AWSSDK.S3.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="AxShockwaveFlashObjects, Version=1.0.0.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
       <HintPath>..\packages\CrystalReports.AxShockwaveFlashObjects.13.0.4000\lib\net40\AxShockwaveFlashObjects.dll</HintPath>
       <Private>True</Private>
@@ -233,6 +241,7 @@
     <Content Include="DatabaseScript\SQL\Procedures\ESY_SP_GetNextSerialNumber.sql" />
     <Content Include="DatabaseScript\SQL\Tables\ESY_GRPO.sql" />
     <Content Include="DatabaseScript\SQL\Views\ESY_GetServerPassword.sql" />
+    <Content Include="DatabaseScript\SQL\Views\ESY_AWSConfig.sql" />
     <Content Include="DatabaseScript\SQL\Views\ESY_VW_GRPO_LINES.sql" />
   </ItemGroup>
   <ItemGroup>

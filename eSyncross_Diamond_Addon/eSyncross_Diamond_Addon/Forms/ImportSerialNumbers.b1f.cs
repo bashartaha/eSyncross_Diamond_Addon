@@ -20,6 +20,7 @@ namespace Diamond_Addon.Forms
     {
         System.Data.DataTable dt = null;
         Dictionary<string, int> NextSerialNumbers = new Dictionary<string, int>();
+        Dictionary<string, string> MissingPricesList = new Dictionary<string, string>();
         public ImportSerialNumbers()
         {
             try
@@ -640,6 +641,7 @@ namespace Diamond_Addon.Forms
                 #region Lines
 
                 NextSerialNumbers.Clear();
+                MissingPricesList.Clear();
 
                 while (!records.EoF)
                 {
@@ -695,6 +697,14 @@ namespace Diamond_Addon.Forms
                         }
                       
                     }
+
+                    #region Validate Prices in Price List
+                    // check if the item code has a price in the price list "" using a query to check prices in ITM1, price list number = 1
+                    //if the item has no price or 0
+                    // then use records.Fields.Item("TagPrice").Value to update the price in that price list 
+                    // if the price >0 and the price in price list NOT EQUAL  records.Fields.Item("TagPrice").Value then add this item to the dictionary : MissingPricesList < itemCode , $"Item code {Itemcode} has different Price"
+                    // at the end of the posting show a message with all items has different prices in message box
+                    #endregion
 
                     oDocument.Lines.SerialNumbers.UserFields.Fields.Item("U_MaxDiscountPer").Value = records.Fields.Item("MaxDiscountPer").Value;
                     oDocument.Lines.SerialNumbers.UserFields.Fields.Item("U_PearlWeight").Value = records.Fields.Item("PearlWeight").Value;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Diamond_Addon.Providers;
 using SAPbouiCOM.Framework;
 
 namespace DiamondAddon.Forms
@@ -43,11 +44,35 @@ namespace DiamondAddon.Forms
 
         private void Button0_ClickAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
         {
-            // this button will call AWS_Provider and trigger the fucitns 
-            // call SQL query to fetch all serial numbers
-            // create CSV file 
-            //Upload to a bucket in AWS
+            try
+            {
+                Button0.Item.Enabled = false;
+                Application.SBO_Application.SetStatusBarMessage(
+                    "Creating and uploading the available-stock CSV file...",
+                    SAPbouiCOM.BoMessageTime.bmt_Short,
+                    false);
 
+                StockUploadResult result = AWS_Provider.UploadAvailableStock();
+
+                Application.SBO_Application.StatusBar.SetSystemMessage(
+                    string.Format(
+                        "Uploaded {0} available serial number(s) to AWS S3 as {1}.",
+                        result.RowCount,
+                        result.ObjectKey),
+                    SAPbouiCOM.BoMessageTime.bmt_Medium,
+                    SAPbouiCOM.BoStatusBarMessageType.smt_Success);
+            }
+            catch (Exception ex)
+            {
+                Application.SBO_Application.SetStatusBarMessage(
+                    "Stock upload failed: " + ex.Message,
+                    SAPbouiCOM.BoMessageTime.bmt_Medium,
+                    true);
+            }
+            finally
+            {
+                Button0.Item.Enabled = true;
+            }
         }
     }
 }
