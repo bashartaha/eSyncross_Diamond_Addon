@@ -169,6 +169,9 @@
     <Compile Include="Forms\BrowseImportFile.b1f.cs">
       <DependentUpon>BrowseImportFile.b1f</DependentUpon>
     </Compile>
+    <Compile Include="Forms\DifferentPrices.b1f.cs">
+      <DependentUpon>DifferentPrices.b1f</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ImportSerialNumbers.b1f.cs">
       <DependentUpon>ImportSerialNumbers.b1f</DependentUpon>
     </Compile>
@@ -186,6 +189,7 @@
     </Compile>
     <Compile Include="Handlers\JsonFormats.cs" />
     <Compile Include="Models\Notification.cs" />
+    <Compile Include="Models\PriceDifference.cs" />
     <Compile Include="Models\UDs\ChildTable.cs" />
     <Compile Include="Models\UDs\InitialValue.cs" />
     <Compile Include="Models\UDs\ParentTable.cs" />
@@ -209,6 +213,9 @@
     <None Include="Forms\BrowseImportFile.b1f">
       <FormCategory>UserForm</FormCategory>
       <SubType>Designer</SubType>
+    </None>
+    <None Include="Forms\DifferentPrices.b1f">
+      <FormCategory>UserForm</FormCategory>
     </None>
     <None Include="Forms\ImportSerialNumbers.b1f">
       <FormCategory>UserForm</FormCategory>

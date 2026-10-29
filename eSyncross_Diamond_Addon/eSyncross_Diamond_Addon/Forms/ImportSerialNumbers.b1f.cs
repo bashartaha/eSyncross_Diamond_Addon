@@ -12,6 +12,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Data.SqlClient;
 using System.Data;
+using Diamond_Addon.Models;
 
 namespace Diamond_Addon.Forms
 {
@@ -20,7 +21,7 @@ namespace Diamond_Addon.Forms
     {
         System.Data.DataTable dt = null;
         Dictionary<string, int> NextSerialNumbers = new Dictionary<string, int>();
-        Dictionary<string, string> MissingPricesList = new Dictionary<string, string>();
+        List<PriceDifference> MissingPricesList = new List<PriceDifference>();
         public ImportSerialNumbers()
         {
             try
@@ -645,7 +646,8 @@ namespace Diamond_Addon.Forms
 
                 while (!records.EoF)
                 {
-                    oDocument.Lines.ItemCode = GenerateItemCode(records);
+                    string itemCode = GenerateItemCode(records);
+                    oDocument.Lines.ItemCode = itemCode;
 
 
 
@@ -699,11 +701,16 @@ namespace Diamond_Addon.Forms
                     }
 
                     #region Validate Prices in Price List
-                    // check if the item code has a price in the price list "" using a query to check prices in ITM1, price list number = 1
-                    //if the item has no price or 0
-                    // then use records.Fields.Item("TagPrice").Value to update the price in that price list 
-                    // if the price >0 and the price in price list NOT EQUAL  records.Fields.Item("TagPrice").Value then add this item to the dictionary : MissingPricesList < itemCode , $"Item code {Itemcode} has different Price"
-                    // at the end of the posting show a message with all items has different prices in message box
+                    decimal tagPrice = 0M;
+                    object tagPriceValue = records.Fields.Item("TagPrice").Value;
+
+                    if (tagPriceValue != null && tagPriceValue != DBNull.Value &&
+                        !string.IsNullOrWhiteSpace(tagPriceValue.ToString()))
+                    {
+                        tagPrice = Convert.ToDecimal(tagPriceValue, CultureInfo.InvariantCulture);
+                    }
+
+                    ValidatePriceListPrice(itemCode, tagPrice);
                     #endregion
 
                     oDocument.Lines.SerialNumbers.UserFields.Fields.Item("U_MaxDiscountPer").Value = records.Fields.Item("MaxDiscountPer").Value;
@@ -833,6 +840,14 @@ namespace Diamond_Addon.Forms
                     EditText13.Value = oDocument.DocNum.ToString();
                     Application.SBO_Application.StatusBar.SetSystemMessage($"Document has been successfully posted, DocNum # {oDocument.DocNum}", SAPbouiCOM.BoMessageTime.bmt_Medium,SAPbouiCOM.BoStatusBarMessageType.smt_Success);
                     Button1.Item.Visible = false;
+
+                    if (MissingPricesList.Count > 0)
+                    {
+                        DiamondAddon.Forms.DifferentPrices differentPricesForm =
+                            new DiamondAddon.Forms.DifferentPrices(
+                                new List<PriceDifference>(MissingPricesList));
+                        differentPricesForm.Show();
+                    }
                 }
                 #endregion
 
@@ -904,6 +919,109 @@ namespace Diamond_Addon.Forms
 
 
             return itemCode;
+        }
+
+        private void ValidatePriceListPrice(string itemCode, decimal tagPrice)
+        {
+            const int priceListNumber = 1;
+            string escapedItemCode = itemCode.Replace("'", "''");
+            SAPbobsCOM.Recordset priceRecordset = null;
+            SAPbobsCOM.Items item = null;
+
+            try
+            {
+                priceRecordset = B1Provider.oRecordset(
+                    "SELECT T0.ItemName, T1.Price " +
+                    "FROM OITM T0 " +
+                    "LEFT JOIN ITM1 T1 ON T1.ItemCode = T0.ItemCode " +
+                    $"AND T1.PriceList = {priceListNumber} " +
+                    $"WHERE T0.ItemCode = '{escapedItemCode}'");
+
+                decimal currentPrice = 0M;
+                string itemName = itemCode;
+                if (priceRecordset.RecordCount > 0 &&
+                    priceRecordset.Fields.Item("ItemName").Value != null &&
+                    priceRecordset.Fields.Item("ItemName").Value != DBNull.Value)
+                {
+                    itemName = priceRecordset.Fields.Item("ItemName").Value.ToString();
+                }
+
+                if (priceRecordset.RecordCount > 0 &&
+                    priceRecordset.Fields.Item("Price").Value != null &&
+                    priceRecordset.Fields.Item("Price").Value != DBNull.Value)
+                {
+                    currentPrice = Convert.ToDecimal(
+                        priceRecordset.Fields.Item("Price").Value,
+                        CultureInfo.InvariantCulture);
+                }
+
+                if (currentPrice <= 0M && tagPrice > 0M)
+                {
+                    item = (SAPbobsCOM.Items)B1Provider.oCompany.GetBusinessObject(
+                        SAPbobsCOM.BoObjectTypes.oItems);
+
+                    if (!item.GetByKey(itemCode))
+                    {
+                        throw new Exception($"Unable to load item {itemCode} to update price list {priceListNumber}.");
+                    }
+
+                    bool priceListFound = false;
+                    for (int line = 0; line < item.PriceList.Count; line++)
+                    {
+                        item.PriceList.SetCurrentLine(line);
+                        if (item.PriceList.PriceList == priceListNumber)
+                        {
+                            item.PriceList.Price = Convert.ToDouble(tagPrice);
+                            priceListFound = true;
+                            break;
+                        }
+                    }
+
+                    if (!priceListFound)
+                    {
+                        throw new Exception($"Price list {priceListNumber} was not found for item {itemCode}.");
+                    }
+
+                    int updateResult = item.Update();
+                    if (updateResult != 0)
+                    {
+                        throw new Exception(
+                            $"Unable to update price list {priceListNumber} for item {itemCode}: " +
+                            B1Provider.oCompany.GetLastErrorDescription());
+                    }
+                }
+                else if (currentPrice > 0M && currentPrice != tagPrice)
+                {
+                    PriceDifference priceDifference = MissingPricesList.FirstOrDefault(
+                        difference => string.Equals(
+                            difference.ItemCode,
+                            itemCode,
+                            StringComparison.OrdinalIgnoreCase));
+
+                    if (priceDifference == null)
+                    {
+                        priceDifference = new PriceDifference();
+                        MissingPricesList.Add(priceDifference);
+                    }
+
+                    priceDifference.ItemCode = itemCode;
+                    priceDifference.ItemName = itemName;
+                    priceDifference.CurrentPrice = currentPrice;
+                    priceDifference.NewTagPrice = tagPrice;
+                }
+            }
+            finally
+            {
+                if (item != null)
+                {
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(item);
+                }
+
+                if (priceRecordset != null)
+                {
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(priceRecordset);
+                }
+            }
         }
 
         private string GenerateNextSerialNumber(string taggingDefinition)
