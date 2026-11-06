@@ -234,10 +234,12 @@
       <FormCategory>UserForm</FormCategory>
     </None>
     <None Include="packages.config" />
+    <None Include="Resources\counters.csv" />
     <None Include="Resources\CrystalReports\Picklist.rpt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\ESY_GRPO_import_template.csv" />
+    <None Include="Resources\stores.csv" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="DatabaseScript\HANA\Procedures\EVO_SP_GetAvailableQuantityInBins.sql" />
@@ -248,7 +250,9 @@
     <Content Include="DatabaseScript\SQL\Procedures\ESY_SP_GetNextSerialNumber.sql" />
     <Content Include="DatabaseScript\SQL\Tables\ESY_GRPO.sql" />
     <Content Include="DatabaseScript\SQL\Views\ESY_GetServerPassword.sql" />
-    <Content Include="DatabaseScript\SQL\Views\ESY_AWSConfig1.sql" />
+    <Content Include="DatabaseScript\SQL\Views\ESY_RIDF_AvailableStockQuery.sql" />
+    <Content Include="DatabaseScript\SQL\Views\ESY_RIDF_CountersQuery.sql" />
+    <Content Include="DatabaseScript\SQL\Views\ESY_RIDF_StoresQuery.sql" />
     <Content Include="DatabaseScript\SQL\Views\ESY_VW_GRPO_LINES.sql" />
   </ItemGroup>
   <ItemGroup>

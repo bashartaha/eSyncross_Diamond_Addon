@@ -15,45 +15,46 @@ namespace Diamond_Addon.Providers
 {
     internal static class AWS_Provider
     {
-        private const string AwsConfigViewName = "ESY_AWSConfig";
-        private const string FileNamePrefix = "stocks_template";
+        private const string AwsConfigViewName = "ESY_VW_AWSConfig";
+        private const string FileNamePrefix = "stock";
+        private const string CountersFolderPrefix =
+            "ApiPushData/c2024ecd-791f-4861-a70d-b6367aed967f_tenant/bc393926-be05-455e-becc-39cfe5526544_connection/counters";
+        private const string StoresFolderPrefix =
+            "ApiPushData/c2024ecd-791f-4861-a70d-b6367aed967f_tenant/bc393926-be05-455e-becc-39cfe5526544_connection/erp_stores";
 
-        private const string AvailableStockQuery = @"
-SELECT
-    T0.[DistNumber] AS [SRNo],
-    ISNULL(T2.[ItemName], '') AS [ItemDescription],
-    ISNULL(T2.[U_ESY_Category], '') AS [CategoryName],
-    ISNULL(T2.[U_ESY_JewelleryType], '') AS [JewelryTypeName],
-    ISNULL(T0.[U_StockPoint], '') AS [StockPointName],
-    ISNULL(T3.[WhsName], '') AS [LocationName],
-    ISNULL(T0.[U_TotalWeight], 0) AS [GrossWeight],
-    ISNULL(T0.[U_RubyWt], 0) AS [RubyWeight],
-    ISNULL(T0.[U_SaphireWt], 0) AS [SaphireWeight],
-    ISNULL(T0.[U_EmraldWt], 0) AS [EmaraldWeight],
-    ISNULL(T0.[U_OtherStoneWt], 0) AS [OtherStoneWeight],
-    ISNULL(T0.[U_DiamondWt], 0) AS [Carat],
-    ISNULL(T0.[U_TagPrice], 0) AS [TagPrice],
-    T0.[InDate] AS [InwardDate],
-    ISNULL(T2.[U_ESY_Design], '') AS [DesignName],
-    ISNULL(T2.[U_ESY_Brand], '') AS [BrandName],
-    T2.[ItemCode] AS [Alias]
-FROM [OSRN] T0
-INNER JOIN [OSRQ] T1
-    ON T1.[ItemCode] = T0.[ItemCode]
-   AND T1.[SysNumber] = T0.[SysNumber]
-INNER JOIN [OITM] T2
-    ON T2.[ItemCode] = T0.[ItemCode]
-LEFT JOIN [OWHS] T3
-    ON T3.[WhsCode] = T1.[WhsCode]
-WHERE T1.[Quantity] > 0
-ORDER BY T0.[DistNumber], T1.[WhsCode]";
+        private const string AvailableStockQuery =
+            "SELECT * FROM [dbo].[ESY_RIDF_AvailableStockQuery]";
+        private const string CountersQuery =
+            "SELECT * FROM [dbo].[ESY_RIDF_CountersQuery]";
+        private const string StoresQuery =
+            "SELECT * FROM [dbo].[ESY_RIDF_StoresQuery]";
+
+        internal static CsvUploadResult UploadCounters()
+        {
+            return UploadTwoColumnCsv(
+                CountersQuery,
+                "counters.csv",
+                CountersFolderPrefix,
+                "counter_code",
+                "counter_name");
+        }
+
+        internal static CsvUploadResult UploadStores()
+        {
+            return UploadTwoColumnCsv(
+                StoresQuery,
+                "stores.csv",
+                StoresFolderPrefix,
+                "code",
+                "name");
+        }
 
         internal static StockUploadResult UploadAvailableStock()
         {
             AwsConfiguration configuration = LoadConfiguration();
             string fileName = string.Format(
                 CultureInfo.InvariantCulture,
-                "{0}_{1:yyyyMMddHHmmss}.csv",
+                "{0}.csv",
                 FileNamePrefix,
                 DateTime.Now);
             string temporaryFilePath = Path.Combine(Path.GetTempPath(), fileName);
@@ -65,6 +66,67 @@ ORDER BY T0.[DistNumber], T1.[WhsCode]";
                 UploadFile(configuration, temporaryFilePath, objectKey);
 
                 return new StockUploadResult(fileName, objectKey, rowCount);
+            }
+            finally
+            {
+                TryDeleteTemporaryFile(temporaryFilePath);
+            }
+        }
+
+        private static CsvUploadResult UploadTwoColumnCsv(
+            string query,
+            string fileName,
+            string folderPrefix,
+            string firstColumn,
+            string secondColumn)
+        {
+            AwsConfiguration configuration = LoadConfiguration();
+            string temporaryFilePath = Path.Combine(Path.GetTempPath(), fileName);
+
+            try
+            {
+                Recordset recordset = null;
+                int rowCount = 0;
+
+                try
+                {
+                    recordset = B1Provider.oRecordset(query);
+
+                    using (StreamWriter writer = new StreamWriter(
+                        temporaryFilePath,
+                        false,
+                        new UTF8Encoding(false)))
+                    using (CsvWriter csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+                    {
+                        csv.WriteField(firstColumn);
+                        csv.WriteField(secondColumn);
+                        csv.NextRecord();
+
+                        while (!recordset.EoF)
+                        {
+                            csv.WriteField(GetText(recordset, firstColumn));
+                            csv.WriteField(GetText(recordset, secondColumn));
+                            csv.NextRecord();
+
+                            rowCount++;
+                            recordset.MoveNext();
+                        }
+                    }
+                }
+                finally
+                {
+                    ReleaseComObject(recordset);
+                }
+
+                string objectKey = BuildObjectKey(folderPrefix, fileName);
+                UploadFile(configuration, temporaryFilePath, objectKey);
+                return new CsvUploadResult(fileName, objectKey, rowCount);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException(
+                    "Unable to create or upload " + fileName + ". " + ex.Message,
+                    ex);
             }
             finally
             {
@@ -343,6 +405,20 @@ ORDER BY T0.[DistNumber], T1.[WhsCode]";
     internal sealed class StockUploadResult
     {
         internal StockUploadResult(string fileName, string objectKey, int rowCount)
+        {
+            FileName = fileName;
+            ObjectKey = objectKey;
+            RowCount = rowCount;
+        }
+
+        internal string FileName { get; private set; }
+        internal string ObjectKey { get; private set; }
+        internal int RowCount { get; private set; }
+    }
+
+    internal sealed class CsvUploadResult
+    {
+        internal CsvUploadResult(string fileName, string objectKey, int rowCount)
         {
             FileName = fileName;
             ObjectKey = objectKey;

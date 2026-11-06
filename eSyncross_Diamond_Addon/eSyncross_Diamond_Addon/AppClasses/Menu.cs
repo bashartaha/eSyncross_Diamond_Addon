@@ -25,9 +25,9 @@ namespace Diamond_Addon
                 B1Provider.CreateMenuItem("ESY_DIO", "ESY_DIO_IMT", "Import From Excel", SAPbouiCOM.BoMenuType.mt_STRING, null, -1);
                 B1Provider.CreateMenuItem("ESY_DIO", "ESY_DIO_PRT", "Print", SAPbouiCOM.BoMenuType.mt_STRING, null, -1);
                 B1Provider.CreateMenuItem("ESY_DIO", "ESY_DIO_TAG", "Tag Inquiry", SAPbouiCOM.BoMenuType.mt_STRING, null, -1);
-
+                B1Provider.CreateMenuItem("ESY_DIO", "ESY_DIO_UPD", "Upload To RFID App", SAPbouiCOM.BoMenuType.mt_STRING, null, -1);
                 B1Provider.CreateMenuItem("ESY_DIO", "ESY_DIO_INI", "Initialize", SAPbouiCOM.BoMenuType.mt_STRING, null, -1);
-
+                
 
 
             }
