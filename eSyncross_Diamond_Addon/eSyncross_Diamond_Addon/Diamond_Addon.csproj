@@ -248,7 +248,7 @@
     <Content Include="DatabaseScript\SQL\Procedures\ESY_SP_GetNextSerialNumber.sql" />
     <Content Include="DatabaseScript\SQL\Tables\ESY_GRPO.sql" />
     <Content Include="DatabaseScript\SQL\Views\ESY_GetServerPassword.sql" />
-    <Content Include="DatabaseScript\SQL\Views\ESY_AWSConfig.sql" />
+    <Content Include="DatabaseScript\SQL\Views\ESY_AWSConfig1.sql" />
     <Content Include="DatabaseScript\SQL\Views\ESY_VW_GRPO_LINES.sql" />
   </ItemGroup>
   <ItemGroup>
